@@ -4,13 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ROCK ON | Music & Arts Institute</title>
-    <!-- Use Tailwind CSS from a CDN for easy styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Use the Inter font for a modern look -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome for musical and art icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -18,36 +15,68 @@
             background-color: #000000;
         }
 
-        /* Hero Section Background with a subtle gradient overlay */
         .hero-background {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('') center/cover no-repeat;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3') center/cover no-repeat;
             background-attachment: fixed;
         }
 
-        /* Keyframes for a subtle logo pulse animation */
         @keyframes pulse-logo {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
         
         .logo-animate {
             animation: pulse-logo 2s ease-in-out infinite;
         }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Card Hover Effects */
+        .program-card {
+            transition: all 0.3s ease;
+        }
+
+        .program-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(220, 38, 38, 0.2);
+        }
+
+        /* Loading Animation */
+        .loader {
+            border: 4px solid rgba(220, 38, 38, 0.1);
+            border-left-color: #dc2626;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Button Hover Effect */
+        .hover-effect:hover {
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.5);
+        }
     </style>
 </head>
 <body class="bg-black text-white">
+    <!-- Loading Screen -->
+    <div id="loader" class="fixed inset-0 z-50 flex items-center justify-center bg-black">
+        <div class="loader"></div>
+    </div>
 
     <!-- Header Section -->
-    <header class="bg-black shadow-lg fixed top-0 w-full z-50">
-        <div class="container mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center">
+    <header class="bg-black/90 backdrop-blur-md shadow-lg fixed top-0 w-full z-40 transition-all duration-300">
+        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
             <!-- Logo and Site Title -->
-            <a href="#" class="text-3xl font-bold tracking-wider text-red-600 flex items-center">
-                <!-- New custom SVG logo -->
-                <svg class="h-10 w-10 mr-2 logo-animate" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <a href="#" class="text-3xl font-bold tracking-wider text-red-600 flex items-center hover:text-red-500 transition-colors duration-300">
+                <svg class="h-12 w-12 mr-2 logo-animate" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2L2 12H6V22H18V12H22L12 2Z" fill="currentColor"/>
                     <path d="M12 2L15.5 12H18L12 22L6 12H8.5L12 2Z" fill="white" fill-opacity="0.2"/>
                     <path d="M12 11.5L14.2426 13.7426L16.4853 11.5L14.2426 9.25736L12 11.5Z" fill="currentColor"/>
@@ -57,11 +86,11 @@
             
             <!-- Navigation Menu -->
             <nav class="mt-4 md:mt-0">
-                <ul class="flex flex-wrap justify-center md:space-x-6 space-x-4">
-                    <li><a href="#home" class="text-red-600 hover:text-red-400 transition-colors duration-300">Home</a></li>
-                    <li><a href="#music" class="text-red-600 hover:text-red-400 transition-colors duration-300">Music</a></li>
-                    <li><a href="#arts" class="text-red-600 hover:text-red-400 transition-colors duration-300">Arts</a></li>
-                    <li><a href="#contact" class="text-red-600 hover:text-red-400 transition-colors duration-300">Contact</a></li>
+                <ul class="flex flex-wrap justify-center md:space-x-8 space-x-4">
+                    <li><a href="#home" class="text-red-600 hover:text-red-400 transition-colors duration-300 font-semibold">Home</a></li>
+                    <li><a href="#programs" class="text-red-600 hover:text-red-400 transition-colors duration-300 font-semibold">Programs</a></li>
+                    <li><a href="#contact" class="text-red-600 hover:text-red-400 transition-colors duration-300 font-semibold">Contact</a></li>
+                    <li><a href="#" class="px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all duration-300 hover-effect">Enroll Now</a></li>
                 </ul>
             </nav>
         </div>
@@ -70,63 +99,88 @@
     <!-- Hero Section -->
     <main id="home" class="hero-background min-h-screen flex items-center justify-center">
         <div class="container mx-auto px-4 py-20 text-center">
-            <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight drop-shadow-lg">
-                Unleash Your Inner Rockstar.
+            <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6 animate-fade-in">
+                Unleash Your Inner
+                <span class="text-red-600">Rockstar</span>
             </h1>
-            <p class="mt-6 text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto">
+            <p class="mt-6 text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
                 Ignite your passion for music and visual arts with our world-class programs.
+                Join a community of artists and musicians.
             </p>
-            <a href="#contact" class="inline-block mt-8 px-10 py-4 bg-red-600 text-white font-bold rounded-full shadow-lg hover:bg-red-500 transition-all duration-300 transform hover:scale-105">
-                Join Now!
-            </a>
+            <div class="mt-10 space-x-4">
+                <a href="#contact" class="inline-block px-10 py-4 bg-red-600 text-white font-bold rounded-full shadow-lg hover:bg-red-500 transition-all duration-300 transform hover:scale-105 hover-effect">
+                    Start Your Journey
+                </a>
+                <a href="#programs" class="inline-block px-10 py-4 bg-transparent border-2 border-white text-white font-bold rounded-full hover:bg-white hover:text-black transition-all duration-300">
+                    Explore Programs
+                </a>
+            </div>
         </div>
     </main>
 
     <!-- Programs Section -->
-    <section class="bg-black py-16">
+    <section id="programs" class="bg-black py-24">
         <div class="container mx-auto px-4">
-            <h2 class="text-4xl font-bold text-center text-red-600 mb-12">Our Programs</h2>
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-red-600 mb-4">Our Programs</h2>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">Choose your path to artistic excellence with our diverse range of programs.</p>
+            </div>
             
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Music Programs Card -->
-                <div id="music" class="bg-gray-900 rounded-xl p-8 shadow-2xl border border-red-600 transform transition-all duration-300 hover:scale-105 hover:shadow-red-500/50">
-                    <div class="text-center mb-4">
+                <div class="program-card bg-gradient-to-br from-gray-900 to-black rounded-xl p-8 shadow-2xl border border-red-600">
+                    <div class="text-center mb-6">
                         <i class="fas fa-drum text-6xl text-red-600"></i>
                     </div>
                     <h3 class="text-3xl font-bold mb-4 text-red-600">Music</h3>
-                    <p class="text-gray-300 leading-relaxed">
-                        From guitar and drums to vocals and piano, our expert instructors will guide you on your musical journey. We offer courses for all skill levels, from beginners to advanced performers.
+                    <p class="text-gray-300 leading-relaxed mb-6">
+                        Master your instrument with our comprehensive music programs. Learn from industry professionals and develop your unique style.
                     </p>
-                    <button class="mt-6 px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-500 transition-colors duration-300 w-full">
-                        Explore Music
+                    <ul class="text-gray-400 mb-6 space-y-2">
+                        <li><i class="fas fa-check text-red-600 mr-2"></i>Guitar & Bass</li>
+                        <li><i class="fas fa-check text-red-600 mr-2"></i>Drums & Percussion</li>
+                        <li><i class="fas fa-check text-red-600 mr-2"></i>Vocals & Piano</li>
+                    </ul>
+                    <button class="w-full px-6 py-3 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all duration-300 hover-effect">
+                        Learn More
                     </button>
                 </div>
                 
                 <!-- Arts Programs Card -->
-                <div id="arts" class="bg-gray-900 rounded-xl p-8 shadow-2xl border border-red-600 transform transition-all duration-300 hover:scale-105 hover:shadow-red-500/50">
-                    <div class="text-center mb-4">
+                <div class="program-card bg-gradient-to-br from-gray-900 to-black rounded-xl p-8 shadow-2xl border border-red-600">
+                    <div class="text-center mb-6">
                         <i class="fas fa-palette text-6xl text-red-600"></i>
                     </div>
-                    <h3 class="text-3xl font-bold mb-4 text-red-600">Arts</h3>
-                    <p class="text-gray-300 leading-relaxed">
-                        Unleash your creativity with our visual arts programs, including painting, drawing, and digital art. Discover your unique style and express yourself through powerful art forms.
+                    <h3 class="text-3xl font-bold mb-4 text-red-600">Visual Arts</h3>
+                    <p class="text-gray-300 leading-relaxed mb-6">
+                        Express yourself through various art forms. Develop technical skills and creativity under expert guidance.
                     </p>
-                    <button class="mt-6 px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-500 transition-colors duration-300 w-full">
-                        Explore Arts
+                    <ul class="text-gray-400 mb-6 space-y-2">
+                        <li><i class="fas fa-check text-red-600 mr-2"></i>Painting & Drawing</li>
+                        <li><i class="fas fa-check text-red-600 mr-2"></i>Digital Art</li>
+                        <li><i class="fas fa-check text-red-600 mr-2"></i>Mixed Media</li>
+                    </ul>
+                    <button class="w-full px-6 py-3 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all duration-300 hover-effect">
+                        Learn More
                     </button>
                 </div>
 
-                 <!-- New Program: Production -->
-                 <div id="production" class="bg-gray-900 rounded-xl p-8 shadow-2xl border border-red-600 transform transition-all duration-300 hover:scale-105 hover:shadow-red-500/50 md:col-span-2 lg:col-span-1">
-                    <div class="text-center mb-4">
+                <!-- Production Programs Card -->
+                <div class="program-card bg-gradient-to-br from-gray-900 to-black rounded-xl p-8 shadow-2xl border border-red-600">
+                    <div class="text-center mb-6">
                         <i class="fas fa-headphones-alt text-6xl text-red-600"></i>
                     </div>
                     <h3 class="text-3xl font-bold mb-4 text-red-600">Production</h3>
-                    <p class="text-gray-300 leading-relaxed">
-                        Learn the art of audio engineering and music production. Our courses cover recording, mixing, mastering, and the use of industry-standard software and hardware.
+                    <p class="text-gray-300 leading-relaxed mb-6">
+                        Master the art of audio engineering and music production with industry-standard equipment.
                     </p>
-                    <button class="mt-6 px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-500 transition-colors duration-300 w-full">
-                        Explore Production
+                    <ul class="text-gray-400 mb-6 space-y-2">
+                        <li><i class="fas fa-check text-red-600 mr-2"></i>Audio Engineering</li>
+                        <li><i class="fas fa-check text-red-600 mr-2"></i>Music Production</li>
+                        <li><i class="fas fa-check text-red-600 mr-2"></i>Sound Design</li>
+                    </ul>
+                    <button class="w-full px-6 py-3 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all duration-300 hover-effect">
+                        Learn More
                     </button>
                 </div>
             </div>
@@ -134,33 +188,137 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="container mx-auto px-4 py-16 text-center">
-        <h2 class="text-4xl font-bold text-red-600 mb-4">Get In Touch</h2>
-        <p class="text-gray-300 mb-8 max-w-2xl mx-auto">
-            Ready to start your journey? Contact us today to learn more about our courses and schedule a tour.
-        </p>
-        <div class="max-w-md mx-auto bg-gray-900 p-8 rounded-lg shadow-2xl border border-red-600 transition-all duration-300">
-            <form class="space-y-4">
-                <div>
-                    <input type="text" placeholder="Your Name" class="w-full p-3 rounded-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-red-600">
+    <section id="contact" class="container mx-auto px-4 py-24">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold text-red-600 mb-4">Get In Touch</h2>
+            <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                Ready to start your artistic journey? Contact us today to learn more about our programs.
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+            <!-- Contact Form -->
+            <div class="bg-gradient-to-br from-gray-900 to-black p-8 rounded-xl shadow-2xl border border-red-600">
+                <form class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-400 mb-2">Name</label>
+                            <input type="text" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-red-600 transition-colors duration-300">
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 mb-2">Email</label>
+                            <input type="email" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-red-600 transition-colors duration-300">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-2">Program of Interest</label>
+                        <select class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-red-600 transition-colors duration-300">
+                            <option>Music Programs</option>
+                            <option>Visual Arts Programs</option>
+                            <option>Production Programs</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-2">Message</label>
+                        <textarea rows="4" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-red-600 transition-colors duration-300"></textarea>
+                    </div>
+                    <button type="submit" class="w-full px-6 py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-500 transition-all duration-300 hover-effect">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="space-y-8">
+                <div class="bg-gradient-to-br from-gray-900 to-black p-6 rounded-xl border border-red-600">
+                    <h3 class="text-xl font-semibold text-red-600 mb-4">Visit Us</h3>
+                    <p class="text-gray-400">123 Music Avenue<br>Rockville, RV 12345</p>
                 </div>
-                <div>
-                    <input type="email" placeholder="Your Email" class="w-full p-3 rounded-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-red-600">
+                
+                <div class="bg-gradient-to-br from-gray-900 to-black p-6 rounded-xl border border-red-600">
+                    <h3 class="text-xl font-semibold text-red-600 mb-4">Contact Info</h3>
+                    <p class="text-gray-400">Phone: (555) 123-4567<br>Email: info@rockon.institute</p>
                 </div>
-                <div>
-                    <textarea placeholder="Your Message" rows="4" class="w-full p-3 rounded-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-red-600"></textarea>
+
+                <div class="bg-gradient-to-br from-gray-900 to-black p-6 rounded-xl border border-red-600">
+                    <h3 class="text-xl font-semibold text-red-600 mb-4">Follow Us</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-red-600 transition-colors duration-300">
+                            <i class="fab fa-facebook fa-2x"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-red-600 transition-colors duration-300">
+                            <i class="fab fa-instagram fa-2x"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-red-600 transition-colors duration-300">
+                            <i class="fab fa-twitter fa-2x"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-red-600 transition-colors duration-300">
+                            <i class="fab fa-youtube fa-2x"></i>
+                        </a>
+                    </div>
                 </div>
-                <button type="submit" class="w-full px-6 py-3 bg-red-600 text-white font-bold rounded-full hover:bg-red-500 transition-colors duration-300">
-                    Send Message
-                </button>
-            </form>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 py-6 text-center text-gray-400 text-sm">
-        <p>&copy; 2023 ROCK ON Music & Arts Institute. All Rights Reserved.</p>
+    <footer class="bg-gradient-to-b from-black to-gray-900 py-12 mt-20">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h4 class="text-red-600 font-bold mb-4">About Us</h4>
+                    <p class="text-gray-400">ROCK ON is dedicated to nurturing artistic talent and fostering creative excellence in music and visual arts.</p>
+                </div>
+                <div>
+                    <h4 class="text-red-600 font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-red-600 transition-colors duration-300">Programs</a></li>
+                        <li><a href="#" class="hover:text-red-600 transition-colors duration-300">Schedule</a></li>
+                        <li><a href="#" class="hover:text-red-600 transition-colors duration-300">Events</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-red-600 font-bold mb-4">Resources</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-red-600 transition-colors duration-300">Blog</a></li>
+                        <li><a href="#" class="hover:text-red-600 transition-colors duration-300">FAQ</a></li>
+                        <li><a href="#" class="hover:text-red-600 transition-colors duration-300">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-red-600 font-bold mb-4">Newsletter</h4>
+                    <p class="text-gray-400 mb-4">Stay updated with our latest news and events.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="flex-1 p-2 rounded-l-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-red-600">
+                        <button class="px-4 py-2 bg-red-600 text-white rounded-r-lg hover:bg-red-500 transition-colors duration-300">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-gray-400 text-sm">
+                <p>&copy; 2023 ROCK ON Music & Arts Institute. All Rights Reserved.</p>
+            </div>
+        </div>
     </footer>
 
+    <!-- Loading Screen Script -->
+    <script>
+        window.addEventListener('load', function() {
+            document.getElementById('loader').style.display = 'none';
+        });
+
+        // Scroll Header Effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('py-2');
+                header.classList.remove('py-4');
+            } else {
+                header.classList.add('py-4');
+                header.classList.remove('py-2');
+            }
+        });
+    </script>
 </body>
 </html>
