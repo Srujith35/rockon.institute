@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3-Month Keyboard Syllabus</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a1a;
+        }
+        .container {
+            max-width: 960px;
+        }
+        .bg-card {
+            background-color: #262626;
+        }
+        .text-header {
+            color: #ff4d4d;
+        }
+        .module-content {
+            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .module-content.expanded {
+            max-height: 500px; /* A large value to ensure it can expand */
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+    <div class="container mx-auto">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-header leading-tight mb-2">3-Month Keyboard Syllabus</h1>
+            <p class="text-lg sm:text-xl text-gray-400">A step-by-step roadmap for your musical journey.</p>
+        </header>
+
+        <!-- Syllabus Sections -->
+        <div class="grid gap-8">
+            <!-- Step 1 Section -->
+            <div class="bg-card rounded-2xl shadow-xl p-6 sm:p-8">
+                <div class="flex items-center justify-between cursor-pointer" onclick="toggleModule(this)">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 flex-shrink-0 bg-red-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">1</span>
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-200">Initial Notes (C, D, E, F, G)</h2>
+                    </div>
+                    <svg class="w-8 h-8 text-red-600 transform transition-transform duration-500 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                </div>
+                <div class="module-content">
+                    <p class="text-gray-400 my-4">
+                        Begin by learning the most fundamental notes and mastering proper finger positioning to build a strong foundation.
+                    </p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-400 ml-4">
+                        <li><strong class="text-gray-200">Note Recognition:</strong> Learn and identify notes C, D, E, F, and G on the keyboard.</li>
+                        <li><strong class="text-gray-200">Hand Position:</strong> Master a relaxed, curved hand shape and use correct finger numbers (thumb is 1, index is 2, etc.).</li>
+                        <li><strong class="text-gray-200">Finger Exercises:</strong> Practice simple exercises to train your fingers on these initial notes.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Step 2 Section -->
+            <div class="bg-card rounded-2xl shadow-xl p-6 sm:p-8">
+                <div class="flex items-center justify-between cursor-pointer" onclick="toggleModule(this)">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 flex-shrink-0 bg-red-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">2</span>
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-200">Learning from C to B</h2>
+                    </div>
+                    <svg class="w-8 h-8 text-red-600 transform transition-transform duration-500 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                </div>
+                <div class="module-content">
+                    <p class="text-gray-400 my-4">
+                        Expand your knowledge of the keyboard by learning all the notes within one octave, from C to B.
+                    </p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-400 ml-4">
+                        <li><strong class="text-gray-200">All White Keys:</strong> Learn to recognize and play all white keys within an octave.</li>
+                        <li><strong class="text-gray-200">Finger Independence:</strong> Focus on exercises that improve the dexterity and independence of each finger.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Step 3 Section -->
+            <div class="bg-card rounded-2xl shadow-xl p-6 sm:p-8">
+                <div class="flex items-center justify-between cursor-pointer" onclick="toggleModule(this)">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 flex-shrink-0 bg-red-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">3</span>
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-200">First Melodies (No Chords)</h2>
+                    </div>
+                    <svg class="w-8 h-8 text-red-600 transform transition-transform duration-500 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                </div>
+                <div class="module-content">
+                    <p class="text-gray-400 my-4">
+                        Start playing simple, recognizable songs using only the melody line in the treble clef. This helps with sight-reading and timing.
+                    </p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-400 ml-4">
+                        <li><strong class="text-gray-200">Practice Songs:</strong> Learn classic tunes like "Jingle Bells" and "Mary Had a Little Lamb."</li>
+                        <li><strong class="text-gray-200">Rhythm and Timing:</strong> Focus on playing with a steady beat and following the rhythm of the notes.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Step 4 Section -->
+            <div class="bg-card rounded-2xl shadow-xl p-6 sm:p-8">
+                <div class="flex items-center justify-between cursor-pointer" onclick="toggleModule(this)">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 flex-shrink-0 bg-red-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">4</span>
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-200">Basic Chords & Regional Songs</h2>
+                    </div>
+                    <svg class="w-8 h-8 text-red-600 transform transition-transform duration-500 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                </div>
+                <div class="module-content">
+                    <p class="text-gray-400 my-4">
+                        Introduce the concept of harmony by learning your first chords and applying them to songs you already know.
+                    </p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-400 ml-4">
+                        <li><strong class="text-gray-200">Basic Chords:</strong> Learn simple major and minor chords (triads).</li>
+                        <li><strong class="text-gray-200">Regional Songs:</strong> Practice playing familiar regional songs that use a few basic chords.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Step 5 Section -->
+            <div class="bg-card rounded-2xl shadow-xl p-6 sm:p-8">
+                <div class="flex items-center justify-between cursor-pointer" onclick="toggleModule(this)">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 flex-shrink-0 bg-red-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">5</span>
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-200">More Complex Songs & Chords</h2>
+                    </div>
+                    <svg class="w-8 h-8 text-red-600 transform transition-transform duration-500 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                </div>
+                <div class="module-content">
+                    <p class="text-gray-400 my-4">
+                        Move on to more challenging pieces that require better two-hand coordination and a wider range of chords.
+                    </p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-400 ml-4">
+                        <li><strong class="text-gray-200">Advanced Chords:</strong> Learn more chords and inversions to add variety to your playing.</li>
+                        <li><strong class="text-gray-200">Complex Pieces:</strong> Practice longer songs with more intricate melody and rhythm.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Step 6 Section -->
+            <div class="bg-card rounded-2xl shadow-xl p-6 sm:p-8">
+                <div class="flex items-center justify-between cursor-pointer" onclick="toggleModule(this)">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 flex-shrink-0 bg-red-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">6</span>
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-200">Mastering Scales & Grand Repertoire</h2>
+                    </div>
+                    <svg class="w-8 h-8 text-red-600 transform transition-transform duration-500 ease-in-out" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                </div>
+                <div class="module-content">
+                    <p class="text-gray-400 my-4">
+                        Reach a new level of proficiency by mastering all major and minor scales and applying them to larger, more challenging pieces.
+                    </p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-400 ml-4">
+                        <li><strong class="text-gray-200">Scales:</strong> Learn all major and minor scales to understand key signatures and musical structure.</li>
+                        <li><strong class="text-gray-200">Advanced Repertoire:</strong> Tackle longer, more complex songs that incorporate all the skills you've learned.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-12 text-center bg-card rounded-2xl shadow-xl p-6 sm:p-8">
+            <h3 class="text-2xl font-bold text-header mb-4">Daily Practice Routine</h3>
+            <p class="text-gray-400 mb-4">Consistency is key to rapid progress. A minimum of 30-45 minutes per day is recommended.</p>
+            <ul class="list-none space-y-3 text-gray-400 text-left">
+                <li><strong class="text-red-600">Warm-up (5 mins):</strong> Simple finger exercises and scales to improve dexterity.</li>
+                <li><strong class="text-red-600">Technique (10 mins):</strong> Focus on new skills from the current syllabus step, such as chord practice or scales.</li>
+                <li><strong class="text-red-600">Song Practice (20 mins):</strong> Work on a song you are learning. Break it down into small sections and focus on difficult parts.</li>
+                <li><strong class="text-red-600">Ear Training (5 mins):</strong> Listen to simple melodies and try to play them back without looking at sheet music. You can use an app or an online tool to help with this.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for handling the click-to-open/close functionality
+        function toggleModule(element) {
+            // Find the parent card and the content div within it
+            const card = element.closest('.bg-card');
+            const content = card.querySelector('.module-content');
+            const icon = card.querySelector('svg');
+
+            // Toggle the 'expanded' class to show/hide the content
+            content.classList.toggle('expanded');
+
+            // Rotate the icon to indicate state
+            if (content.classList.contains('expanded')) {
+                icon.style.transform = 'rotate(45deg)';
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+    </script>
+</body>
+</html>
+
