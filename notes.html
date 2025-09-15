@@ -35,24 +35,27 @@
             background-color: var(--background-color);
             color: var(--text-primary);
             margin: 0;
-            padding: 2rem;
+            padding: 1rem;
             text-align: center;
+            box-sizing: border-box;
         }
         #notation-container {
             position: relative;
-            padding: 20px;
+            padding: 10px;
             background-color: var(--surface-color);
             border-radius: 16px;
             box-shadow: var(--shadow-lg);
             cursor: pointer;
             transition: height 0.3s ease-in-out;
-            min-width: 1200px;
+            width: 100%;
+            max-width: 1200px;
             border: 1px solid var(--border-color);
+            overflow-x: auto; /* Allow scrolling for the SVG if needed */
         }
         h1 {
             color: var(--text-primary);
             font-weight: 700;
-            font-size: 2.5rem;
+            font-size: clamp(1.8rem, 5vw, 2.5rem); /* Responsive font size */
             margin-bottom: 0.5rem;
         }
         p {
@@ -71,10 +74,10 @@
             border-radius: 16px;
             box-shadow: var(--shadow-md);
             border: 1px solid var(--border-color);
-        }
-         .controls-container {
             flex-wrap: wrap;
             justify-content: center;
+        }
+         .controls-container {
             align-items: center;
             gap: 1rem;
             padding: 1rem 1.5rem;
@@ -109,9 +112,28 @@
             gap: 10px;
             padding: 0 15px;
         }
-        .control-group:not(:last-child) {
-            border-right: 1px solid var(--border-color);
+        
+        /* Responsive control groups */
+        @media (max-width: 768px) {
+            .control-group {
+                width: 100%;
+                justify-content: center;
+                padding-bottom: 10px;
+                border-bottom: 1px solid var(--border-color);
+                border-right: none;
+            }
+            .control-group:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
         }
+        
+        @media (min-width: 769px) {
+            .control-group:not(:last-child) {
+                border-right: 1px solid var(--border-color);
+            }
+        }
+
         label {
             font-weight: 500;
             color: var(--text-primary);
@@ -284,7 +306,7 @@
         <div class="loading-text">Warming up the orchestra...</div>
     </div>
 
-    <div id="main-content" class="hidden">
+    <div id="main-content" class="hidden" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
         <h1>Interactive Music Composer</h1>
         <div class="note-selection-panel">
             <button class="note-btn" data-duration="w">W</button>
@@ -295,59 +317,59 @@
         </div>
         <div class="controls-container">
              <div class="control-group">
-                 <button id="play-btn" class="control-btn">Play</button>
-                 <button id="stop-btn" class="control-btn">Stop</button>
+                  <button id="play-btn" class="control-btn">Play</button>
+                  <button id="stop-btn" class="control-btn">Stop</button>
              </div>
              <div class="control-group">
-                 <button id="transpose-down-btn" class="control-btn">♭</button>
-                 <input type="number" id="transpose-value" class="transpose-input" value="0">
-                 <button id="transpose-up-btn" class="control-btn">♯</button>
+                  <button id="transpose-down-btn" class="control-btn">♭</button>
+                  <input type="number" id="transpose-value" class="transpose-input" value="0">
+                  <button id="transpose-up-btn" class="control-btn">♯</button>
              </div>
              <div class="control-group">
-                 <label for="key-select">Key:</label>
-                 <select id="key-select">
-                     <option value="C">C Major</option>
-                     <option value="Am">A Minor</option>
-                     <option value="G">G Major</option>
-                     <option value="Em">E Minor</option>
-                     <option value="D">D Major</option>
-                     <option value="Bm">B Minor</option>
-                     <option value="A">A Major</option>
-                     <option value="F#m">F# Minor</option>
-                     <option value="E">E Major</option>
-                     <option value="C#m">C# Minor</option>
-                     <option value="B">B Major</option>
-                     <option value="G#m">G# Minor</option>
-                     <option value="F#">F# Major</option>
-                     <option value="D#m">D# Minor</option>
-                     <option value="C#">C# Major</option>
-                     <option value="A#m">A# Minor</option>
-                     <option value="F">F Major</option>
-                     <option value="Dm">D Minor</option>
-                     <option value="Bb">Bb Major</option>
-                     <option value="Gm">G Minor</option>
-                     <option value="Eb">Eb Major</option>
-                     <option value="Cm">C Minor</option>
-                     <option value="Ab">Ab Major</option>
-                     <option value="Fm">F Minor</option>
-                     <option value="Db">Db Major</option>
-                     <option value="Bbm">Bb Minor</option>
-                     <option value="Gb">Gb Major</option>
-                     <option value="Ebm">Eb Minor</option>
-                     <option value="Cb">Cb Major</option>
-                     <option value="Abm">Ab Minor</option>
-                 </select>
+                  <label for="key-select">Key:</label>
+                  <select id="key-select">
+                        <option value="C">C Major</option>
+                        <option value="Am">A Minor</option>
+                        <option value="G">G Major</option>
+                        <option value="Em">E Minor</option>
+                        <option value="D">D Major</option>
+                        <option value="Bm">B Minor</option>
+                        <option value="A">A Major</option>
+                        <option value="F#m">F# Minor</option>
+                        <option value="E">E Major</option>
+                        <option value="C#m">C# Minor</option>
+                        <option value="B">B Major</option>
+                        <option value="G#m">G# Minor</option>
+                        <option value="F#">F# Major</option>
+                        <option value="D#m">D# Minor</option>
+                        <option value="C#">C# Major</option>
+                        <option value="A#m">A# Minor</option>
+                        <option value="F">F Major</option>
+                        <option value="Dm">D Minor</option>
+                        <option value="Bb">Bb Major</option>
+                        <option value="Gm">G Minor</option>
+                        <option value="Eb">Eb Major</option>
+                        <option value="Cm">C Minor</option>
+                        <option value="Ab">Ab Major</option>
+                        <option value="Fm">F Minor</option>
+                        <option value="Db">Db Major</option>
+                        <option value="Bbm">Bb Minor</option>
+                        <option value="Gb">Gb Major</option>
+                        <option value="Ebm">Eb Minor</option>
+                        <option value="Cb">Cb Major</option>
+                        <option value="Abm">Ab Minor</option>
+                  </select>
              </div>
              <div class="control-group">
-                 <label for="accidental-toggle">Accidentals:</label>
-                 <label class="toggle-switch">
-                     <input type="checkbox" id="accidental-toggle" checked>
-                     <span class="slider"></span>
-                 </label>
+                  <label for="accidental-toggle">Accidentals:</label>
+                  <label class="toggle-switch">
+                        <input type="checkbox" id="accidental-toggle" checked>
+                        <span class="slider"></span>
+                  </label>
              </div>
              <div class="control-group">
-                 <button id="import-midi-btn" class="control-btn">Import MIDI</button>
-                 <input type="file" id="midi-file-input" accept=".mid,.midi" class="hidden">
+                  <button id="import-midi-btn" class="control-btn">Import MIDI</button>
+                  <input type="file" id="midi-file-input" accept=".mid,.midi" class="hidden">
              </div>
         </div>
 
@@ -565,6 +587,12 @@
             elements.container.addEventListener('mousemove', InteractionHandler.handleMouseMove);
             elements.container.addEventListener('mouseup', InteractionHandler.handleMouseUp);
             elements.container.addEventListener('mouseleave', InteractionHandler.handleMouseLeave);
+            
+            // Touch events for mobile support
+            elements.container.addEventListener('touchstart', (e) => InteractionHandler.handleMouseDown(e.touches[0]));
+            elements.container.addEventListener('touchmove', (e) => { e.preventDefault(); InteractionHandler.handleMouseMove(e.touches[0]); });
+            elements.container.addEventListener('touchend', InteractionHandler.handleMouseUp);
+
 
             document.addEventListener('keydown', InteractionHandler.handleKeyDown);
 
@@ -597,6 +625,7 @@
                 setTimeout(() => {
                     elements.loadingScreen.style.display = 'none';
                     elements.mainContent.classList.remove('hidden');
+                    elements.mainContent.style.display = 'flex'; // Use flex for proper alignment
                 }, 500);
             },
             showError: (message) => {
@@ -607,11 +636,11 @@
             getPlayhead: () => elements.playhead,
             updateKeySignature: (key) => {
                  if (Array.from(elements.keySelect.options).some(opt => opt.value === key)) {
-                    elements.keySelect.value = key;
-                } else {
-                    console.warn(`Key "${key}" not found in dropdown. Defaulting to C.`);
-                    elements.keySelect.value = 'C';
-                }
+                     elements.keySelect.value = key;
+                 } else {
+                     console.warn(`Key "${key}" not found in dropdown. Defaulting to C.`);
+                     elements.keySelect.value = 'C';
+                 }
             },
             updateTransposeInput,
         };
@@ -626,7 +655,6 @@
 
         const getAccidentalSymbol = (noteData) => {
             const [noteName] = noteData.pitch.split('/');
-            // An accidental is only present if the note name is longer than one character.
             if (noteName.length > 1) {
                 const accidental = noteName.charAt(1);
                 if (accidental === '#' || accidental === 'b') {
@@ -639,8 +667,6 @@
         const createVexNote = (noteData, isSelected, isSlurStart) => {
             const accidentalSymbol = getAccidentalSymbol(noteData);
             
-            // The base pitch for VexFlow should be the note letter followed by the octave.
-            // The accidental is added separately as a modifier.
             const [noteName, octave] = noteData.pitch.split('/');
             const basePitch = noteName.charAt(0) + '/' + octave;
 
@@ -708,10 +734,10 @@
              const curves = State.slurs.map(slur => {
                  let firstNote, lastNote;
                  for (let i=0; i<measuresToRender.length; i++) {
-                     for (let j=0; j<measuresToRender[i].length; j++) {
-                         if (measuresToRender[i][j].id === slur.start.id) firstNote = State.vexNotes[i][j];
-                         if (measuresToRender[i][j].id === slur.end.id) lastNote = State.vexNotes[i][j];
-                     }
+                      for (let j=0; j<measuresToRender[i].length; j++) {
+                          if (measuresToRender[i][j].id === slur.start.id) firstNote = State.vexNotes[i][j];
+                          if (measuresToRender[i][j].id === slur.end.id) lastNote = State.vexNotes[i][j];
+                      }
                  }
                  if (firstNote && lastNote) {
                      return new Vex.Flow.Curve(firstNote, lastNote);
@@ -719,13 +745,6 @@
                  return null;
              }).filter(Boolean);
              curves.forEach(c => c.setContext(context).draw());
-        };
-
-        const resize = () => {
-            const totalMeasures = State.baseMeasures.length;
-            const numRows = Math.ceil(totalMeasures / State.stavesPerRow);
-            const newHeight = (numRows * State.staveHeight) + 80;
-            renderer.resize(1200, newHeight);
         };
         
         return {
@@ -735,42 +754,48 @@
                 context = renderer.getContext();
                 svg = container.querySelector('svg');
             },
-            render: () => {
+            render: (currentWidth) => {
                 try {
-                    resize();
+                    const containerWidth = currentWidth || UI.getContainer().clientWidth;
+                    if (containerWidth <= 0) return;
+
+                    const totalMeasures = State.baseMeasures.length;
+                    const numRows = Math.max(1, Math.ceil(totalMeasures / State.stavesPerRow));
+                    const newHeight = (numRows * State.staveHeight) + 80;
+                    renderer.resize(containerWidth, newHeight);
                     context.clear();
 
                     const measuresToRender = getRenderableMeasures();
                     State.vexStaves = [];
                     State.vexNotes = Array(measuresToRender.length).fill(null).map(() => []);
 
-                    const staveWidth = 280;
-                    const firstStaveExtra = 80;
-                    let currentX = 10, currentY = 40;
+                    const staveMargin = 15;
+                    const effectiveWidth = containerWidth - (staveMargin * 2);
+                    const staveWidth = effectiveWidth / State.stavesPerRow;
+                    let currentX = staveMargin;
+                    let currentY = 40;
 
                     for (let i = 0; i < measuresToRender.length; i++) {
                         const isFirstInRow = i % State.stavesPerRow === 0;
                         if (isFirstInRow) {
                             if (i > 0) {
-                                currentX = 10;
+                                currentX = staveMargin;
                                 currentY += State.staveHeight;
                             }
                         }
                         
-                        const width = isFirstInRow ? staveWidth + firstStaveExtra : staveWidth;
-                        const stave = new Vex.Flow.Stave(currentX, currentY, width);
+                        const stave = new Vex.Flow.Stave(currentX, currentY, staveWidth);
                         
                         if (isFirstInRow) {
                             stave.addClef("treble").addKeySignature(State.currentKey);
-                        }
-                        
-                        if (i === 0) {
-                            stave.addTimeSignature("4/4");
+                            if (i === 0) {
+                                stave.addTimeSignature("4/4");
+                            }
                         }
 
                         stave.setContext(context).draw();
                         State.vexStaves.push(stave);
-                        currentX += width;
+                        currentX += staveWidth;
                         
                         const measureData = measuresToRender[i];
                         const totalBeats = measureData.reduce((sum, note) => sum + MusicTheory.getNoteBeatValue(note), 0);
@@ -797,7 +822,7 @@
                             voice.setStave(stave);
                             
                             const beams = Vex.Flow.Beam.generateBeams(notesForVoice.filter(n => !n.isRest()));
-                            new Vex.Flow.Formatter().format([voice], width - 40);
+                            new Vex.Flow.Formatter().joinVoices([voice]).format([voice], staveWidth - (isFirstInRow ? 40 : 20));
                             voice.draw(context, stave);
                             beams.forEach(b => b.setContext(context).draw());
                         }
@@ -850,9 +875,11 @@
 
                 if (currentMeasureIndex !== -1) {
                     const stave = State.vexStaves[currentMeasureIndex];
-                    const x = stave.getNoteStartX() + (stave.getNoteEndX() - stave.getNoteStartX()) * (beatInMeasure / 4);
-                    UI.getPlayhead().style.transform = `translateX(${x}px)`;
-                    UI.getPlayhead().style.top = `${stave.getY()}px`;
+                    if(stave) {
+                        const x = stave.getNoteStartX() + (stave.getNoteEndX() - stave.getNoteStartX()) * (beatInMeasure / 4);
+                        UI.getPlayhead().style.transform = `translateX(${x}px)`;
+                        UI.getPlayhead().style.top = `${stave.getY()}px`;
+                    }
                 }
 
                 State.animationFrameId = requestAnimationFrame(animate);
@@ -923,7 +950,7 @@
         const getCanvasCoordinates = (event) => {
             const svg = Renderer.getSVG();
             if (!svg) {
-                return { x: -1, y: -1 }; // Return invalid coordinates if svg not ready
+                return { x: -1, y: -1 };
             }
             const svgRect = svg.getBoundingClientRect();
             return { x: event.clientX - svgRect.left, y: event.clientY - svgRect.top };
@@ -979,7 +1006,7 @@
             handleMouseDown: (e) => {
                 if (State.isPlaying) return;
                 const { x, y } = getCanvasCoordinates(e);
-                if (x === -1) return; // Guard against events firing before SVG is ready
+                if (x === -1) return;
                 const clickedNote = getNoteAtCoordinates(x, y);
 
                 if (e.shiftKey && clickedNote) {
@@ -1283,21 +1310,18 @@
             
             const newMeasures = [[]];
             let lastNoteEndInBeats = 0;
-            const quantizationUnit = 0.25; // Quantize to 16th notes
+            const quantizationUnit = 0.25;
 
-            // Sort notes by start time, just in case they aren't already.
             const sortedNotes = track.notes.sort((a, b) => a.ticks - b.ticks);
 
             sortedNotes.forEach(note => {
                 const startInBeats = note.ticks / ticksPerBeat;
                 const durationInBeats = note.durationTicks / ticksPerBeat;
                 
-                // Quantize start and end times to the nearest 16th note.
                 const quantizedStart = Math.round(startInBeats / quantizationUnit) * quantizationUnit;
                 const quantizedEnd = Math.round((startInBeats + durationInBeats) / quantizationUnit) * quantizationUnit;
                 let quantizedDuration = quantizedEnd - quantizedStart;
 
-                // If quantization results in a very short note, give it a minimum duration.
                 if (quantizedDuration <= 0.01) {
                    quantizedDuration = quantizationUnit;
                 }
@@ -1357,11 +1381,30 @@
             Renderer.init();
             Playback.init();
 
-            Renderer.render();
+            window.addEventListener('resize', App.handleResize);
+            App.handleResize(); // Initial call
+
             UI.hideLoadingScreen();
+        },
+        handleResize: () => {
+            // Debounce resize to prevent rapid re-rendering
+            clearTimeout(App.resizeTimeout);
+            App.resizeTimeout = setTimeout(() => {
+                const container = UI.getContainer();
+                if (!container) return;
+                const containerWidth = container.clientWidth;
+
+                let newStavesPerRow;
+                if (containerWidth >= 1100) newStavesPerRow = 4;
+                else if (containerWidth >= 850) newStavesPerRow = 3;
+                else if (containerWidth >= 600) newStavesPerRow = 2;
+                else newStavesPerRow = 1;
+                
+                State.stavesPerRow = newStavesPerRow;
+                Renderer.render(containerWidth);
+            }, 100);
         }
     };
     </script>
 </body>
 </html>
-
