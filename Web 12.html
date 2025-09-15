@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Music Score</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background-color: #f0f2f5;
+            --surface-color: #ffffff;
+            --primary-color: #2563eb;
+            --primary-color-hover: #1d4ed8;
+            --danger-color: #dc2626;
+            --danger-color-hover: #b91c1c;
+            --success-color: #16a34a;
+            --success-color-hover: #15803d;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --border-color-light: #f1f5f9;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 2rem;
+            text-align: center;
+        }
+        #notation-container {
+            position: relative;
+            padding: 20px;
+            background-color: var(--surface-color);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            transition: height 0.3s ease-in-out;
+            min-width: 1200px;
+            border: 1px solid var(--border-color);
+        }
+        h1 {
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+        }
+        .note-selection-panel, .controls-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 12px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+        }
+         .controls-container {
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+        }
+        .note-btn {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
+        }
+        .note-btn:hover {
+            transform: translateY(-2px);
+            border-color: #cbd5e1;
+            box-shadow: var(--shadow-md);
+        }
+        .note-btn.selected {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color-hover);
+            box-shadow: 0 4px 10px -1px rgba(37, 99, 235, 0.4);
+            transform: translateY(-1px);
+        }
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 15px;
+        }
+        .control-group:not(:last-child) {
+            border-right: 1px solid var(--border-color);
+        }
+        label {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        #key-select, .control-btn, .transpose-input {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--surface-color);
+            font-size: 1em;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+            color: var(--text-primary);
+        }
+         .control-btn:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
+        }
+        #play-btn {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+            font-weight: 600;
+        }
+        #play-btn:hover {
+             background-color: var(--success-color-hover);
+             border-color: var(--success-color-hover);
+             color: white;
+        }
+        #stop-btn {
+            background-color: var(--danger-color);
+            border-color: var(--danger-color);
+            color: white;
+            font-weight: 600;
+        }
+        #stop-btn:hover {
+            background-color: var(--danger-color-hover);
+            border-color: var(--danger-color-hover);
+            color: white;
+        }
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 28px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px; width: 20px;
+            left: 4px; bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        input:checked + .slider { background-color: var(--primary-color); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        /* Transpose Input */
+        .transpose-input {
+            width: 50px;
+            text-align: center;
+            padding: 8px 0;
+        }
+        .transpose-input:focus {
+            outline: 2px solid var(--primary-color);
+            border-color: transparent;
+        }
+        .transpose-input::-webkit-outer-spin-button,
+        .transpose-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .transpose-input[type=number] { -moz-appearance: textfield; }
+
+        /* Loading Animation Styles */
+        .loading-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(240, 242, 245, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            transition: opacity 0.5s ease-out;
+        }
+        .music-notes {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .note {
+            font-size: 3rem;
+            color: var(--primary-color);
+            animation: bounce 1.8s infinite cubic-bezier(0.45, 0, 0.55, 1);
+            opacity: 0;
+        }
+        .note:nth-child(1) { animation-delay: 0s; }
+        .note:nth-child(2) { animation-delay: 0.15s; }
+        .note:nth-child(3) { animation-delay: 0.3s; }
+        .note:nth-child(4) { animation-delay: 0.45s; }
+        .note:nth-child(5) { animation-delay: 0.6s; }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); opacity: 0.3; }
+            50% { transform: translateY(-25px); opacity: 1; }
+        }
+        .loading-text {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        .hidden { display: none; }
+        
+        #playhead {
+            position: absolute;
+            width: 3px;
+            height: 100px;
+            background-color: var(--danger-color);
+            border-radius: 3px;
+            top: 60px;
+            left: 0;
+            display: none;
+            z-index: 10;
+        }
+         #playhead::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            width: 11px;
+            height: 11px;
+            background-color: var(--danger-color);
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 5px rgba(220, 38, 38, 0.7);
+        }
+        .measure-highlight {
+            background-color: rgba(37, 99, 235, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loading-screen" class="loading-container">
+        <div class="music-notes">
+            <span class="note">♪</span>
+            <span class="note">♫</span>
+            <span class="note">♪</span>
+            <span class="note">♬</span>
+            <span class="note">♪</span>
+        </div>
+        <div class="loading-text">Warming up the orchestra...</div>
+    </div>
+
+    <div id="main-content" class="hidden">
+        <h1>Interactive Music Composer</h1>
+        <div class="note-selection-panel">
+            <button class="note-btn" data-duration="w">W</button>
+            <button class="note-btn" data-duration="h">H</button>
+            <button class="note-btn selected" data-duration="q">♩</button>
+            <button class="note-btn" data-duration="8">♪</button>
+            <button class="note-btn" data-duration="16">♬</button>
+        </div>
+        <div class="controls-container">
+             <div class="control-group">
+                 <button id="play-btn" class="control-btn">Play</button>
+                 <button id="stop-btn" class="control-btn">Stop</button>
+             </div>
+             <div class="control-group">
+                 <button id="transpose-down-btn" class="control-btn">♭</button>
+                 <input type="number" id="transpose-value" class="transpose-input" value="0">
+                 <button id="transpose-up-btn" class="control-btn">♯</button>
+             </div>
+             <div class="control-group">
+                 <label for="key-select">Key:</label>
+                 <select id="key-select">
+                     <option value="C">C Major</option>
+                     <option value="Am">A Minor</option>
+                     <option value="G">G Major</option>
+                     <option value="Em">E Minor</option>
+                     <option value="D">D Major</option>
+                     <option value="Bm">B Minor</option>
+                     <option value="A">A Major</option>
+                     <option value="F#m">F# Minor</option>
+                     <option value="E">E Major</option>
+                     <option value="C#m">C# Minor</option>
+                     <option value="B">B Major</option>
+                     <option value="G#m">G# Minor</option>
+                     <option value="F#">F# Major</option>
+                     <option value="D#m">D# Minor</option>
+                     <option value="C#">C# Major</option>
+                     <option value="A#m">A# Minor</option>
+                     <option value="F">F Major</option>
+                     <option value="Dm">D Minor</option>
+                     <option value="Bb">Bb Major</option>
+                     <option value="Gm">G Minor</option>
+                     <option value="Eb">Eb Major</option>
+                     <option value="Cm">C Minor</option>
+                     <option value="Ab">Ab Major</option>
+                     <option value="Fm">F Minor</option>
+                     <option value="Db">Db Major</option>
+                     <option value="Bbm">Bb Minor</option>
+                     <option value="Gb">Gb Major</option>
+                     <option value="Ebm">Eb Minor</option>
+                     <option value="Cb">Cb Major</option>
+                     <option value="Abm">Ab Minor</option>
+                 </select>
+             </div>
+             <div class="control-group">
+                 <label for="accidental-toggle">Accidentals:</label>
+                 <label class="toggle-switch">
+                     <input type="checkbox" id="accidental-toggle" checked>
+                     <span class="slider"></span>
+                 </label>
+             </div>
+             <div class="control-group">
+                 <button id="import-midi-btn" class="control-btn">Import MIDI</button>
+                 <input type="file" id="midi-file-input" accept=".mid,.midi" class="hidden">
+             </div>
+        </div>
+
+        <p>Click an empty space to add a note. Click a note to select/drag. Keys: 'd' (dot), 't' (tie), 's' (slur), Arrows (pitch), Shift+Arrows (duration), Delete.</p>
+        <div id="notation-container">
+             <div id="playhead"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.0/build/cjs/vexflow.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <script src="https://unpkg.com/@tonejs/midi"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof Vex !== 'undefined' && Vex.Flow && typeof Tone !== 'undefined') {
+            App.init();
+        } else {
+            console.error('A required library (VexFlow, Tone.js) failed to load.');
+            UI.showError('A required library failed to load. Please check the console and refresh.');
+        }
+    });
+
+    /**
+     * MODULE: State
+     * DESCRIPTION: Holds the application's "single source of truth". All data
+     * that defines the application's current state lives here.
+     */
+    const State = {
+        baseMeasures: [], // Untransposed source of truth
+        slurs: [],
+        vexStaves: [], // VexFlow Stave objects
+        vexNotes: [],  // VexFlow StaveNote objects, mirrors measures structure
+        currentKey: 'C',
+        showAccidentals: true,
+        stavesPerRow: 4,
+        staveHeight: 120,
+        ghostNoteInfo: null,
+        selectedNoteInfo: null,
+        slurStartInfo: null,
+        isPlaying: false,
+        animationFrameId: null,
+        tempo: 120,
+        selectedDuration: 'q',
+        transposeValue: 0,
+        isDragging: false,
+    };
+
+    /**
+     * MODULE: MusicTheory
+     * DESCRIPTION: A collection of pure functions for music-related calculations.
+     */
+    const MusicTheory = (() => {
+        const pitches = ['g/5', 'f/5', 'e/5', 'd/5', 'c/5', 'b/4', 'a/4', 'g/4', 'f/4', 'e/4', 'd/4', 'c/4', 'b/3', 'a/3'];
+        const durations = ['16', '8', 'q', 'h', 'w'];
+        const durationValues = { '16': 0.25, '8': 0.5, 'q': 1, 'h': 2, 'w': 4 };
+        const noteMap = {
+            'c': 0, 'b#': 0, 'c#': 1, 'db': 1, 'd': 2, 'd#': 3, 'eb': 3,
+            'e': 4, 'fb': 4, 'f': 5, 'e#': 5, 'f#': 6, 'gb': 6, 'g': 7,
+            'g#': 8, 'ab': 8, 'a': 9, 'a#': 10, 'bb': 10, 'b': 11, 'cb': 11
+        };
+        const midiNoteNames = ['c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'];
+        const keySignatures = {
+            'C': [], 'Am': [],
+            'G': ['f#'], 'Em': ['f#'],
+            'D': ['f#', 'c#'], 'Bm': ['f#', 'c#'],
+            'A': ['f#', 'c#', 'g#'], 'F#m': ['f#', 'c#', 'g#'],
+            'E': ['f#', 'c#', 'g#', 'd#'], 'C#m': ['f#', 'c#', 'g#', 'd#'],
+            'B': ['f#', 'c#', 'g#', 'd#', 'a#'], 'G#m': ['f#', 'c#', 'g#', 'd#', 'a#'],
+            'F#': ['f#', 'c#', 'g#', 'd#', 'a#', 'e#'], 'D#m': ['f#', 'c#', 'g#', 'd#', 'a#', 'e#'],
+            'C#': ['f#', 'c#', 'g#', 'd#', 'a#', 'e#', 'b#'], 'A#m': ['f#', 'c#', 'g#', 'd#', 'a#', 'e#', 'b#'],
+            'F': ['bb'], 'Dm': ['bb'],
+            'Bb': ['bb', 'eb'], 'Gm': ['bb', 'eb'],
+            'Eb': ['bb', 'eb', 'ab'], 'Cm': ['bb', 'eb', 'ab'],
+            'Ab': ['bb', 'eb', 'ab', 'db'], 'Fm': ['bb', 'eb', 'ab', 'db'],
+            'Db': ['bb', 'eb', 'ab', 'db', 'gb'], 'Bbm': ['bb', 'eb', 'ab', 'db', 'gb'],
+            'Gb': ['bb', 'eb', 'ab', 'db', 'gb', 'cb'], 'Ebm': ['bb', 'eb', 'ab', 'db', 'gb', 'cb'],
+            'Cb': ['bb', 'eb', 'ab', 'db', 'gb', 'cb', 'fb'], 'Abm': ['bb', 'eb', 'ab', 'db', 'gb', 'cb', 'fb']
+        };
+        
+        const getMidiNoteFromPitch = (pitch) => {
+            try {
+                const parts = pitch.toLowerCase().split('/');
+                const noteName = parts[0].replace(/b|#/, '');
+                const accidental = parts[0].length > 1 ? parts[0].charAt(1) : '';
+                const octave = parseInt(parts[1], 10);
+                const noteValue = noteMap[noteName];
+                if (noteValue === undefined) return null;
+                let midi = (octave + 1) * 12 + noteValue;
+                if (accidental === '#') midi++;
+                if (accidental === 'b') midi--;
+                return midi;
+            } catch (e) {
+                console.error(`Could not parse pitch: ${pitch}`, e);
+                return null;
+            }
+        };
+
+        const midiToPitchWithKey = (midiNote, key) => {
+            const keyAccidentals = keySignatures[key] || [];
+            const baseOctave = Math.floor(midiNote / 12) - 1;
+            const noteIndex = midiNote % 12;
+            
+            const usesFlats = key.includes('b') || ['F', 'Dm', 'Gm', 'Cm', 'Fm'].includes(key);
+            
+            let noteName;
+            if (usesFlats) {
+                const flatNames = ['c', 'db', 'd', 'eb', 'e', 'f', 'gb', 'g', 'ab', 'a', 'bb', 'b'];
+                noteName = flatNames[noteIndex];
+            } else {
+                const sharpNames = ['c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'];
+                noteName = sharpNames[noteIndex];
+            }
+            
+            return `${noteName}/${baseOctave}`;
+        };
+
+        return {
+            pitches,
+            durations,
+            durationValues,
+            getNoteBeatValue: (note) => {
+                let beats = durationValues[note.duration];
+                if (note.isDotted) beats *= 1.5;
+                return beats;
+            },
+            pitchToMidi: (pitch) => {
+                try {
+                    const parts = pitch.toLowerCase().split('/');
+                    const noteName = parts[0];
+                    const octave = parseInt(parts[1], 10);
+                    const noteValue = noteMap[noteName];
+                    if (noteValue === undefined) return null;
+                    return (octave + 1) * 12 + noteValue;
+                } catch (e) {
+                    console.error(`Could not parse pitch: ${pitch}`, e);
+                    return null;
+                }
+            },
+            midiToPitch: (midiNote) => {
+                const octave = Math.floor(midiNote / 12) - 1;
+                const noteIndex = midiNote % 12;
+                return `${midiNoteNames[noteIndex]}/${octave}`;
+            },
+            midiToPitchWithKey,
+            vexflowToTonejsPitch: (pitch) => {
+                const [noteName, octave] = pitch.split('/');
+                return noteName.charAt(0).toUpperCase() + noteName.slice(1) + octave;
+            },
+            keySignatures,
+            getMidiNoteFromPitch,
+        };
+    })();
+
+    /**
+     * MODULE: UI
+     * DESCRIPTION: Manages all DOM elements and their events.
+     */
+    const UI = (() => {
+        let elements = {};
+
+        const getDOMElements = () => ({
+            loadingScreen: document.getElementById('loading-screen'),
+            mainContent: document.getElementById('main-content'),
+            container: document.getElementById('notation-container'),
+            keySelect: document.getElementById('key-select'),
+            accidentalToggle: document.getElementById('accidental-toggle'),
+            importMidiBtn: document.getElementById('import-midi-btn'),
+            midiFileInput: document.getElementById('midi-file-input'),
+            playBtn: document.getElementById('play-btn'),
+            stopBtn: document.getElementById('stop-btn'),
+            playhead: document.getElementById('playhead'),
+            transposeUpBtn: document.getElementById('transpose-up-btn'),
+            transposeDownBtn: document.getElementById('transpose-down-btn'),
+            transposeValueInput: document.getElementById('transpose-value'),
+            noteSelectionPanel: document.querySelector('.note-selection-panel'),
+        });
+
+        const setupEventListeners = () => {
+            elements.playBtn.addEventListener('click', Playback.play);
+            elements.stopBtn.addEventListener('click', Playback.stop);
+
+            elements.transposeUpBtn.addEventListener('click', () => {
+                State.transposeValue++;
+                updateTransposeInput();
+                Renderer.render();
+            });
+            elements.transposeDownBtn.addEventListener('click', () => {
+                State.transposeValue--;
+                updateTransposeInput();
+                Renderer.render();
+            });
+            elements.transposeValueInput.addEventListener('change', (e) => {
+                const newValue = parseInt(e.target.value, 10);
+                State.transposeValue = isNaN(newValue) ? 0 : newValue;
+                updateTransposeInput();
+                Renderer.render();
+            });
+
+            elements.keySelect.addEventListener('change', (e) => {
+                const oldKey = State.currentKey;
+                State.currentKey = e.target.value;
+                NoteManager.recalculateAllPitchesForNewKey(oldKey, State.currentKey);
+            });
+
+            elements.accidentalToggle.addEventListener('change', (e) => {
+                State.showAccidentals = e.target.checked;
+                Renderer.render();
+            });
+
+            elements.importMidiBtn.addEventListener('click', () => elements.midiFileInput.click());
+            elements.midiFileInput.addEventListener('change', MidiHandler.handleFileSelect);
+
+            elements.container.addEventListener('mousedown', InteractionHandler.handleMouseDown);
+            elements.container.addEventListener('mousemove', InteractionHandler.handleMouseMove);
+            elements.container.addEventListener('mouseup', InteractionHandler.handleMouseUp);
+            elements.container.addEventListener('mouseleave', InteractionHandler.handleMouseLeave);
+
+            document.addEventListener('keydown', InteractionHandler.handleKeyDown);
+
+            elements.noteSelectionPanel.addEventListener('click', (e) => {
+                const button = e.target.closest('.note-btn');
+                if (button) {
+                    State.selectedDuration = button.dataset.duration;
+                    updateSelectedDurationButton(button);
+                    Renderer.render();
+                }
+            });
+        };
+        
+        const updateSelectedDurationButton = (selectedButton) => {
+            elements.noteSelectionPanel.querySelector('.selected')?.classList.remove('selected');
+            selectedButton.classList.add('selected');
+        };
+
+        const updateTransposeInput = () => {
+            elements.transposeValueInput.value = State.transposeValue;
+        };
+
+        return {
+            init: () => {
+                elements = getDOMElements();
+                setupEventListeners();
+            },
+            hideLoadingScreen: () => {
+                elements.loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    elements.loadingScreen.style.display = 'none';
+                    elements.mainContent.classList.remove('hidden');
+                }, 500);
+            },
+            showError: (message) => {
+                const errorDiv = `<div style="color: red; font-size: 1.2rem; text-align: center;"><div>${message}</div></div>`;
+                document.getElementById('loading-screen').innerHTML = errorDiv;
+            },
+            getContainer: () => elements.container,
+            getPlayhead: () => elements.playhead,
+            updateKeySignature: (key) => {
+                 if (Array.from(elements.keySelect.options).some(opt => opt.value === key)) {
+                    elements.keySelect.value = key;
+                } else {
+                    console.warn(`Key "${key}" not found in dropdown. Defaulting to C.`);
+                    elements.keySelect.value = 'C';
+                }
+            },
+            updateTransposeInput,
+        };
+    })();
+
+    /**
+     * MODULE: Renderer
+     * DESCRIPTION: Handles all rendering logic with VexFlow.
+     */
+    const Renderer = (() => {
+        let renderer, context, svg;
+
+        const getAccidentalSymbol = (noteData) => {
+            const [noteName] = noteData.pitch.split('/');
+            // An accidental is only present if the note name is longer than one character.
+            if (noteName.length > 1) {
+                const accidental = noteName.charAt(1);
+                if (accidental === '#' || accidental === 'b') {
+                    return accidental;
+                }
+            }
+            return null;
+        };
+
+        const createVexNote = (noteData, isSelected, isSlurStart) => {
+            const accidentalSymbol = getAccidentalSymbol(noteData);
+            
+            // The base pitch for VexFlow should be the note letter followed by the octave.
+            // The accidental is added separately as a modifier.
+            const [noteName, octave] = noteData.pitch.split('/');
+            const basePitch = noteName.charAt(0) + '/' + octave;
+
+            const vexNote = new Vex.Flow.StaveNote({
+                clef: 'treble',
+                keys: [noteData.isRest ? 'b/4' : basePitch],
+                duration: noteData.duration + (noteData.isRest ? 'r' : ''),
+                auto_stem: !noteData.isRest
+            });
+            
+            if (noteData.isDotted) {
+                Vex.Flow.Dot.buildAndAttach([vexNote], { all: true });
+            }
+            if (isSelected && !noteData.isRest) {
+                vexNote.setStyle({ fillStyle: '#007aff', strokeStyle: '#007aff' });
+            }
+            if (isSlurStart && !noteData.isRest) {
+                vexNote.setStyle({ fillStyle: '#4CAF50', strokeStyle: '#4CAF50' });
+            }
+
+            if (State.showAccidentals && !noteData.isRest && accidentalSymbol) {
+                vexNote.addModifier(new Vex.Flow.Accidental(accidentalSymbol));
+            }
+            
+            return vexNote;
+        };
+
+        const getRenderableMeasures = () => {
+            const measures = JSON.parse(JSON.stringify(State.baseMeasures));
+            if (State.transposeValue !== 0) {
+                measures.forEach(measure => {
+                    measure.forEach(note => {
+                        if (!note.isRest) {
+                            const currentMidi = MusicTheory.getMidiNoteFromPitch(note.pitch);
+                            if (currentMidi !== null) {
+                                const newMidi = currentMidi + State.transposeValue;
+                                note.pitch = MusicTheory.midiToPitchWithKey(newMidi, State.currentKey);
+                            }
+                        }
+                    });
+                });
+            }
+            return measures;
+        };
+
+        const drawTies = (measuresToRender) => {
+            const ties = [];
+            const flatNotes = measuresToRender.flatMap((measure, mIdx) => measure.map((note, nIdx) => ({ ...note, mIdx, nIdx })));
+
+            for (let i = 0; i < flatNotes.length - 1; i++) {
+                const current = flatNotes[i];
+                const next = flatNotes[i+1];
+                if (current.isTiedToNext && current.pitch === next.pitch) {
+                    const fromNote = State.vexNotes[current.mIdx]?.[current.nIdx];
+                    const toNote = State.vexNotes[next.mIdx]?.[next.nIdx];
+                    if (fromNote && toNote) {
+                        ties.push(new Vex.Flow.StaveTie({ first_note: fromNote, last_note: toNote }));
+                    }
+                }
+            }
+            ties.forEach(t => t.setContext(context).draw());
+        };
+
+        const drawSlurs = (measuresToRender) => {
+             const curves = State.slurs.map(slur => {
+                 let firstNote, lastNote;
+                 for (let i=0; i<measuresToRender.length; i++) {
+                     for (let j=0; j<measuresToRender[i].length; j++) {
+                         if (measuresToRender[i][j].id === slur.start.id) firstNote = State.vexNotes[i][j];
+                         if (measuresToRender[i][j].id === slur.end.id) lastNote = State.vexNotes[i][j];
+                     }
+                 }
+                 if (firstNote && lastNote) {
+                     return new Vex.Flow.Curve(firstNote, lastNote);
+                 }
+                 return null;
+             }).filter(Boolean);
+             curves.forEach(c => c.setContext(context).draw());
+        };
+
+        const resize = () => {
+            const totalMeasures = State.baseMeasures.length;
+            const numRows = Math.ceil(totalMeasures / State.stavesPerRow);
+            const newHeight = (numRows * State.staveHeight) + 80;
+            renderer.resize(1200, newHeight);
+        };
+        
+        return {
+            init: () => {
+                const container = UI.getContainer();
+                renderer = new Vex.Flow.Renderer(container, Vex.Flow.Renderer.Backends.SVG);
+                context = renderer.getContext();
+                svg = container.querySelector('svg');
+            },
+            render: () => {
+                try {
+                    resize();
+                    context.clear();
+
+                    const measuresToRender = getRenderableMeasures();
+                    State.vexStaves = [];
+                    State.vexNotes = Array(measuresToRender.length).fill(null).map(() => []);
+
+                    const staveWidth = 280;
+                    const firstStaveExtra = 80;
+                    let currentX = 10, currentY = 40;
+
+                    for (let i = 0; i < measuresToRender.length; i++) {
+                        const isFirstInRow = i % State.stavesPerRow === 0;
+                        if (isFirstInRow) {
+                            if (i > 0) {
+                                currentX = 10;
+                                currentY += State.staveHeight;
+                            }
+                        }
+                        
+                        const width = isFirstInRow ? staveWidth + firstStaveExtra : staveWidth;
+                        const stave = new Vex.Flow.Stave(currentX, currentY, width);
+                        
+                        if (isFirstInRow) {
+                            stave.addClef("treble").addKeySignature(State.currentKey);
+                        }
+                        
+                        if (i === 0) {
+                            stave.addTimeSignature("4/4");
+                        }
+
+                        stave.setContext(context).draw();
+                        State.vexStaves.push(stave);
+                        currentX += width;
+                        
+                        const measureData = measuresToRender[i];
+                        const totalBeats = measureData.reduce((sum, note) => sum + MusicTheory.getNoteBeatValue(note), 0);
+                        if (Math.abs(totalBeats - 4) > 0.001 && measureData.length > 0) {
+                            stave.setStyle({ fillStyle: '#D32F2F', strokeStyle: '#D32F2F' });
+                        }
+                        
+                        const notesForVoice = measureData.map((noteData, j) => {
+                            const isSelected = State.selectedNoteInfo?.id === noteData.id;
+                            const isSlurStart = State.slurStartInfo?.id === noteData.id;
+                            const vexNote = createVexNote(noteData, isSelected, isSlurStart);
+                            State.vexNotes[i][j] = vexNote;
+                            return vexNote;
+                        });
+                        
+                        if (State.ghostNoteInfo && State.ghostNoteInfo.measureIndex === i && totalBeats < 4) {
+                            const ghostNote = new Vex.Flow.StaveNote({ clef: 'treble', keys: [State.ghostNoteInfo.pitch], duration: State.selectedDuration });
+                            ghostNote.setStyle({ fillStyle: "rgba(0,0,0,0.2)", strokeStyle: "rgba(0,0,0,0.2)" });
+                            notesForVoice.push(ghostNote);
+                        }
+
+                        if (notesForVoice.length > 0) {
+                            const voice = new Vex.Flow.Voice({ num_beats: 4, beat_value: 4 }).setStrict(false).addTickables(notesForVoice);
+                            voice.setStave(stave);
+                            
+                            const beams = Vex.Flow.Beam.generateBeams(notesForVoice.filter(n => !n.isRest()));
+                            new Vex.Flow.Formatter().format([voice], width - 40);
+                            voice.draw(context, stave);
+                            beams.forEach(b => b.setContext(context).draw());
+                        }
+                    }
+                    drawTies(measuresToRender);
+                    drawSlurs(measuresToRender);
+                } catch (e) {
+                    console.error("Renderer Error:", e);
+                    UI.showError(`A rendering error occurred: ${e.message}`);
+                }
+            },
+            getSVG: () => svg,
+            getRenderableMeasures,
+        };
+    })();
+
+    /**
+     * MODULE: Playback
+     * DESCRIPTION: Manages audio playback and playhead animation.
+     */
+    const Playback = (() => {
+        let synth;
+
+        const updatePlayheadAnimation = (totalDuration) => {
+            const startTime = performance.now();
+            let lastHighlightedMeasure = -1;
+
+            const animate = (time) => {
+                if (!State.isPlaying) return;
+                const elapsed = (time - startTime) / 1000;
+                if (elapsed >= totalDuration) {
+                    Playback.stop();
+                    return;
+                }
+
+                const measures = Renderer.getRenderableMeasures();
+                let accumulatedDuration = 0;
+                let currentMeasureIndex = -1, beatInMeasure = 0;
+
+                for (let i = 0; i < measures.length; i++) {
+                    const measureBeats = measures[i].reduce((sum, note) => sum + MusicTheory.getNoteBeatValue(note), 0);
+                    const measureDuration = measureBeats * (60 / State.tempo);
+                    if (elapsed < accumulatedDuration + measureDuration) {
+                        currentMeasureIndex = i;
+                        beatInMeasure = (elapsed - accumulatedDuration) / (60 / State.tempo);
+                        break;
+                    }
+                    accumulatedDuration += measureDuration;
+                }
+
+                if (currentMeasureIndex !== -1) {
+                    const stave = State.vexStaves[currentMeasureIndex];
+                    const x = stave.getNoteStartX() + (stave.getNoteEndX() - stave.getNoteStartX()) * (beatInMeasure / 4);
+                    UI.getPlayhead().style.transform = `translateX(${x}px)`;
+                    UI.getPlayhead().style.top = `${stave.getY()}px`;
+                }
+
+                State.animationFrameId = requestAnimationFrame(animate);
+            };
+            State.animationFrameId = requestAnimationFrame(animate);
+        };
+
+        return {
+            init: () => {
+                synth = new Tone.PolySynth(Tone.Synth).toDestination();
+            },
+            play: async () => {
+                if (State.isPlaying) return;
+                await Tone.start();
+                State.isPlaying = true;
+                State.selectedNoteInfo = null;
+                Renderer.render();
+
+                Tone.Transport.cancel(0);
+                Tone.Transport.position = 0;
+                Tone.Transport.bpm.value = State.tempo;
+
+                const allNotesFlat = Renderer.getRenderableMeasures().flat();
+                const events = [];
+                let time = 0;
+
+                for (let i = 0; i < allNotesFlat.length; i++) {
+                    const noteData = allNotesFlat[i];
+                    if (!noteData.isRest) {
+                        const isTieContinuation = i > 0 && allNotesFlat[i-1].isTiedToNext && allNotesFlat[i-1].pitch === noteData.pitch;
+                        if (!isTieContinuation) {
+                            let combinedDuration = MusicTheory.getNoteBeatValue(noteData) * (60 / State.tempo);
+                            let lookahead = i;
+                            while(allNotesFlat[lookahead]?.isTiedToNext && allNotesFlat[lookahead+1]?.pitch === noteData.pitch) {
+                                combinedDuration += MusicTheory.getNoteBeatValue(allNotesFlat[lookahead+1]) * (60 / State.tempo);
+                                lookahead++;
+                            }
+                            events.push({ time, pitch: MusicTheory.vexflowToTonejsPitch(noteData.pitch), duration: combinedDuration });
+                        }
+                    }
+                    time += MusicTheory.getNoteBeatValue(noteData) * (60 / State.tempo);
+                }
+
+                new Tone.Part((t, value) => {
+                    synth.triggerAttackRelease(value.pitch, value.duration, t);
+                }, events).start(0);
+
+                Tone.Transport.start();
+                UI.getPlayhead().style.display = 'block';
+                updatePlayheadAnimation(time);
+            },
+            stop: () => {
+                Tone.Transport.stop();
+                synth.releaseAll();
+                State.isPlaying = false;
+                UI.getPlayhead().style.display = 'none';
+                cancelAnimationFrame(State.animationFrameId);
+                document.querySelectorAll('.measure-highlight').forEach(el => el.classList.remove('measure-highlight'));
+            },
+        };
+    })();
+
+    /**
+     * MODULE: InteractionHandler
+     * DESCRIPTION: Handles mouse and keyboard interaction logic.
+     */
+    const InteractionHandler = (() => {
+        const getCanvasCoordinates = (event) => {
+            const svg = Renderer.getSVG();
+            if (!svg) {
+                return { x: -1, y: -1 }; // Return invalid coordinates if svg not ready
+            }
+            const svgRect = svg.getBoundingClientRect();
+            return { x: event.clientX - svgRect.left, y: event.clientY - svgRect.top };
+        };
+        
+        const getNoteAtCoordinates = (x, y) => {
+            const measuresToRender = Renderer.getRenderableMeasures();
+            for(let i = 0; i < State.vexNotes.length; i++) {
+                for (let j = 0; j < State.vexNotes[i].length; j++) {
+                    const vexNote = State.vexNotes[i][j];
+                    const noteData = measuresToRender[i]?.[j];
+                    if (vexNote && noteData && vexNote.getBoundingBox) {
+                        const bbox = vexNote.getBoundingBox();
+                        if (bbox && x >= bbox.x && x <= bbox.x + bbox.w && y >= bbox.y && y <= bbox.y + bbox.h) {
+                            return { ...noteData, measureIndex: i, noteIndex: j };
+                        }
+                    }
+                }
+            }
+            return null;
+        };
+        
+        const getMeasureFromCoordinates = (x, y) => {
+            for (let i = 0; i < State.vexStaves.length; i++) {
+                const stave = State.vexStaves[i];
+                const bounds = {
+                    x: stave.getX(), y: stave.getY(),
+                    w: stave.getWidth(), h: State.staveHeight
+                };
+                if (x > bounds.x && x < bounds.x + bounds.w && y > bounds.y && y < bounds.y + bounds.h) {
+                    return { index: i, stave };
+                }
+            }
+            return null;
+        };
+
+        const getClosestPitch = (stave, y) => {
+            let closestPitch = null;
+            let minDistance = Infinity;
+            for (let i = 0; i < MusicTheory.pitches.length; i++) {
+                const line = (i - 1) * 0.5;
+                const noteY = stave.getYForLine(line);
+                const distance = Math.abs(y - noteY);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestPitch = MusicTheory.pitches[i];
+                }
+            }
+            return closestPitch;
+        };
+
+        return {
+            handleMouseDown: (e) => {
+                if (State.isPlaying) return;
+                const { x, y } = getCanvasCoordinates(e);
+                if (x === -1) return; // Guard against events firing before SVG is ready
+                const clickedNote = getNoteAtCoordinates(x, y);
+
+                if (e.shiftKey && clickedNote) {
+                    NoteManager.deleteNote(clickedNote.id);
+                    return;
+                }
+
+                if (clickedNote) {
+                    if (!clickedNote.isRest) {
+                        State.selectedNoteInfo = clickedNote;
+                        State.isDragging = true;
+                    }
+                } else {
+                    State.selectedNoteInfo = null;
+                    State.isDragging = false;
+                    State.slurStartInfo = null;
+                    NoteManager.addNote(x, y);
+                }
+                Renderer.render();
+            },
+            handleMouseMove: (e) => {
+                if (State.isPlaying) return;
+                const { x, y } = getCanvasCoordinates(e);
+
+                if (State.isDragging && State.selectedNoteInfo) {
+                    const targetMeasure = getMeasureFromCoordinates(x, y);
+                    if (!targetMeasure) return;
+
+                    const newPitch = getClosestPitch(targetMeasure.stave, y);
+                    NoteManager.updateNotePitch(State.selectedNoteInfo.id, newPitch);
+                    Renderer.render();
+                } else {
+                    const targetMeasure = getMeasureFromCoordinates(x, y);
+                    State.ghostNoteInfo = targetMeasure ? {
+                        measureIndex: targetMeasure.index,
+                        pitch: getClosestPitch(targetMeasure.stave, y)
+                    } : null;
+                    Renderer.render();
+                }
+            },
+            handleMouseUp: () => { State.isDragging = false; },
+            handleMouseLeave: () => {
+                if (!State.isDragging) {
+                    State.ghostNoteInfo = null;
+                    Renderer.render();
+                }
+            },
+            handleKeyDown: (e) => {
+                if (State.isPlaying) return;
+                if (e.key === 'Escape') {
+                    State.slurStartInfo = null;
+                    Renderer.render();
+                }
+
+                if (!State.selectedNoteInfo) return;
+
+                const note = NoteManager.findNoteById(State.selectedNoteInfo.id);
+                if (!note) return;
+
+                if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (e.shiftKey) {
+                        NoteManager.updateNoteDuration(note, e.key === 'ArrowUp');
+                    } else {
+                        NoteManager.updateNotePitchStep(note, e.key === 'ArrowUp');
+                    }
+                } else if (e.key === 'Backspace' || e.key === 'Delete') {
+                    e.preventDefault();
+                    NoteManager.deleteNote(note.id);
+                } else if (e.key === 'd') {
+                    note.isDotted = !note.isDotted;
+                } else if (e.key === 't') {
+                    note.isTiedToNext = !note.isTiedToNext;
+                } else if (e.key === 's') {
+                    if (!State.slurStartInfo) {
+                        State.slurStartInfo = State.selectedNoteInfo;
+                    } else {
+                        State.slurs.push({ start: State.slurStartInfo, end: State.selectedNoteInfo });
+                        State.slurStartInfo = null;
+                    }
+                }
+                Renderer.render();
+            },
+            getMeasureFromCoordinates,
+            getClosestPitch,
+        };
+    })();
+
+    /**
+     * MODULE: NoteManager
+     * DESCRIPTION: Handles direct manipulation of the note data in the State.
+     */
+    const NoteManager = (() => {
+        const findNoteById = (noteId) => {
+            for (const measure of State.baseMeasures) {
+                const note = measure.find(n => n.id === noteId);
+                if (note) return note;
+            }
+            return null;
+        };
+        
+        const recalculateAllPitchesForNewKey = (oldKey, newKey) => {
+            State.baseMeasures.forEach(measure => {
+                measure.forEach(note => {
+                    if (note.isRest) return;
+                    
+                    const currentMidi = MusicTheory.getMidiNoteFromPitch(note.pitch);
+                    if (currentMidi !== null) {
+                        note.pitch = MusicTheory.midiToPitchWithKey(currentMidi, newKey);
+                    }
+                });
+            });
+            Renderer.render();
+        };
+
+        return {
+            findNoteById,
+            addNote: (x, y) => {
+                const targetMeasure = InteractionHandler.getMeasureFromCoordinates(x, y);
+                if (!targetMeasure) return;
+
+                const { index: measureIndex, stave } = targetMeasure;
+                const duration = State.selectedDuration;
+                const newNoteBeats = MusicTheory.getNoteBeatValue({ duration, isDotted: false });
+                const totalBeats = State.baseMeasures[measureIndex]?.reduce((sum, n) => sum + MusicTheory.getNoteBeatValue(n), 0) || 0;
+
+                if (totalBeats + newNoteBeats > 4.001) {
+                    console.warn(`Cannot add note. Measure is full. Current beats: ${totalBeats}, New note beats: ${newNoteBeats}`);
+                    return;
+                }
+                
+                let pitch = InteractionHandler.getClosestPitch(stave, y);
+                
+                const keyAccidentals = MusicTheory.keySignatures[State.currentKey] || [];
+                const [noteName, octave] = pitch.split('/');
+                const keyAccidentalForNote = keyAccidentals.find(acc => acc.charAt(0) === noteName);
+
+                if (keyAccidentalForNote) {
+                    pitch = keyAccidentalForNote + '/' + octave;
+                }
+
+                let finalPitch = pitch;
+                if (State.transposeValue !== 0) {
+                    const currentMidi = MusicTheory.getMidiNoteFromPitch(pitch);
+                    if (currentMidi !== null) {
+                        const newMidi = currentMidi - State.transposeValue;
+                        finalPitch = MusicTheory.midiToPitchWithKey(newMidi, State.currentKey);
+                    }
+                }
+                
+                const newNote = {
+                    id: crypto.randomUUID(), pitch: finalPitch, duration,
+                    isDotted: false, isRest: false, isTiedToNext: false
+                };
+                
+                State.baseMeasures[measureIndex].push(newNote);
+
+                if (measureIndex === State.baseMeasures.length - 1 && totalBeats + newNoteBeats >= 4) {
+                    State.baseMeasures.push([]);
+                }
+                Renderer.render();
+            },
+            deleteNote: (noteId) => {
+                let noteDeleted = false;
+                State.baseMeasures = State.baseMeasures.map(measure =>
+                    measure.filter(note => {
+                        if (note.id === noteId) {
+                            noteDeleted = true;
+                            return false;
+                        }
+                        return true;
+                    })
+                );
+
+                if (noteDeleted) {
+                    State.selectedNoteInfo = null;
+                    State.isDragging = false;
+                    if (State.slurStartInfo?.id === noteId) State.slurStartInfo = null;
+                    State.slurs = State.slurs.filter(s => s.start.id !== noteId && s.end.id !== noteId);
+                    Renderer.render();
+                }
+            },
+            updateNotePitch: (noteId, newPitch) => {
+                const note = findNoteById(noteId);
+                if (note && note.pitch !== newPitch) {
+                    note.pitch = newPitch;
+                }
+            },
+            updateNotePitchStep: (note, moveUp) => {
+                if (note.isRest) return;
+                
+                const currentMidi = MusicTheory.getMidiNoteFromPitch(note.pitch);
+                if (currentMidi === null) {
+                    console.error("Update pitch failed: MIDI conversion returned null for", note.pitch);
+                    return;
+                }
+                
+                const newMidi = currentMidi + (moveUp ? 1 : -1);
+                const newPitch = MusicTheory.midiToPitchWithKey(newMidi, State.currentKey);
+                
+                note.pitch = newPitch;
+                Renderer.render();
+            },
+            updateNoteDuration: (note, increase) => {
+                const currentIndex = MusicTheory.durations.indexOf(note.duration);
+                const newIndex = (currentIndex + (increase ? 1 : -1) + MusicTheory.durations.length) % MusicTheory.durations.length;
+                note.duration = MusicTheory.durations[newIndex];
+                Renderer.render();
+            },
+            recalculateAllPitchesForNewKey,
+        };
+    })();
+
+    /**
+     * MODULE: MidiHandler
+     * DESCRIPTION: Handles MIDI file import and processing with corrected logic.
+     */
+    const MidiHandler = (() => {
+        const beatsToNoteSequence = (beats, pitch, isRest = false) => {
+            const sequence = [];
+            let remaining = beats;
+            const tolerance = 0.001;
+
+            const allDurations = [
+                { duration: 'w', isDotted: true, beatValue: 6 },
+                { duration: 'w', isDotted: false, beatValue: 4 },
+                { duration: 'h', isDotted: true, beatValue: 3 },
+                { duration: 'h', isDotted: false, beatValue: 2 },
+                { duration: 'q', isDotted: true, beatValue: 1.5 },
+                { duration: 'q', isDotted: false, beatValue: 1 },
+                { duration: '8', isDotted: true, beatValue: 0.75 },
+                { duration: '8', isDotted: false, beatValue: 0.5 },
+                { duration: '16', isDotted: true, beatValue: 0.375 },
+                { duration: '16', isDotted: false, beatValue: 0.25 },
+            ];
+
+            while (remaining > tolerance) {
+                const bestFit = allDurations.find(d => d.beatValue <= remaining + tolerance);
+                if (bestFit) {
+                    sequence.push({ pitch, duration: bestFit.duration, isDotted: bestFit.isDotted, isRest });
+                    remaining -= bestFit.beatValue;
+                } else {
+                    console.warn(`Could not find a note duration for remaining beats: ${remaining}`);
+                    break;
+                }
+            }
+            return sequence;
+        };
+
+        const distributeBeatsToMeasures = (totalBeats, pitch, isRest, measures) => {
+            let beatsLeftToDistribute = totalBeats;
+            const tolerance = 0.001;
+
+            while (beatsLeftToDistribute > tolerance) {
+                let currentMeasure = measures[measures.length - 1];
+                let currentMeasureBeats = currentMeasure.reduce((sum, n) => sum + MusicTheory.getNoteBeatValue(n), 0);
+                
+                if (4 - currentMeasureBeats < tolerance) {
+                    measures.push([]);
+                    currentMeasure = measures[measures.length - 1];
+                    currentMeasureBeats = 0;
+                }
+
+                const beatsLeftInMeasure = 4 - currentMeasureBeats;
+                const beatsForThisMeasure = Math.min(beatsLeftToDistribute, beatsLeftInMeasure);
+                
+                const noteSequence = beatsToNoteSequence(beatsForThisMeasure, pitch, isRest);
+                
+                noteSequence.forEach((note, index) => {
+                    const isLastPart = (beatsLeftToDistribute - beatsForThisMeasure) < tolerance;
+                    if (!isRest && (!isLastPart || index < noteSequence.length - 1)) {
+                        note.isTiedToNext = true;
+                    }
+                    currentMeasure.push({ id: crypto.randomUUID(), ...note });
+                });
+                
+                beatsLeftToDistribute -= beatsForThisMeasure;
+            }
+        };
+
+        const processMidiData = (parsedMidi) => {
+            const ticksPerBeat = parsedMidi.header.ppq;
+            const track = parsedMidi.tracks.find(t => t.notes.length > 0);
+            if (!track) {
+                alert("Could not find any notes in this MIDI file.");
+                return;
+            }
+            
+            State.tempo = parsedMidi.header.tempos[0]?.bpm || 120;
+            
+            let newKey = 'C';
+            if (parsedMidi.header.keySignatures && parsedMidi.header.keySignatures.length > 0) {
+                const ks = parsedMidi.header.keySignatures[0];
+                const keyMap = { 'C#': 'C#', 'F#': 'F#', 'B-': 'Bb', 'E-': 'Eb', 'A-': 'Ab', 'D-': 'Db', 'G-': 'Gb' };
+                const tonic = keyMap[ks.key] || ks.key;
+                 newKey = ks.scale === 'minor' ? `${tonic}m` : tonic;
+            }
+
+            UI.updateKeySignature(newKey);
+            State.currentKey = newKey;
+            
+            const newMeasures = [[]];
+            let lastNoteEndInBeats = 0;
+            const quantizationUnit = 0.25; // Quantize to 16th notes
+
+            // Sort notes by start time, just in case they aren't already.
+            const sortedNotes = track.notes.sort((a, b) => a.ticks - b.ticks);
+
+            sortedNotes.forEach(note => {
+                const startInBeats = note.ticks / ticksPerBeat;
+                const durationInBeats = note.durationTicks / ticksPerBeat;
+                
+                // Quantize start and end times to the nearest 16th note.
+                const quantizedStart = Math.round(startInBeats / quantizationUnit) * quantizationUnit;
+                const quantizedEnd = Math.round((startInBeats + durationInBeats) / quantizationUnit) * quantizationUnit;
+                let quantizedDuration = quantizedEnd - quantizedStart;
+
+                // If quantization results in a very short note, give it a minimum duration.
+                if (quantizedDuration <= 0.01) {
+                   quantizedDuration = quantizationUnit;
+                }
+
+                const restDuration = quantizedStart - lastNoteEndInBeats;
+                if (restDuration > 0.01) {
+                    distributeBeatsToMeasures(restDuration, 'b/4', true, newMeasures);
+                }
+
+                const pitch = MusicTheory.midiToPitchWithKey(note.midi, State.currentKey);
+                distributeBeatsToMeasures(quantizedDuration, pitch, false, newMeasures);
+                
+                lastNoteEndInBeats = quantizedStart + quantizedDuration;
+            });
+
+            if (newMeasures.length > 0 && newMeasures[newMeasures.length - 1].length > 0) {
+                newMeasures.push([]);
+            }
+
+            State.baseMeasures = newMeasures;
+            State.slurs = [];
+            State.transposeValue = 0;
+            UI.updateTransposeInput();
+            Renderer.render();
+        };
+
+        return {
+            handleFileSelect: (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (re) => {
+                    try {
+                        const parsedMidi = new Midi(re.target.result);
+                        processMidiData(parsedMidi);
+                    } catch (error) {
+                        console.error("Error parsing MIDI file:", error);
+                        alert("Could not parse MIDI file.");
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+                e.target.value = '';
+            }
+        };
+    })();
+
+    /**
+     * MODULE: App
+     * DESCRIPTION: Main application controller. Initializes and orchestrates all modules.
+     */
+    const App = {
+        init: () => {
+            State.baseMeasures = Array(8).fill(null).map(() => []);
+            
+            UI.init();
+            Renderer.init();
+            Playback.init();
+
+            Renderer.render();
+            UI.hideLoadingScreen();
+        }
+    };
+    </script>
+</body>
+</html>
+
