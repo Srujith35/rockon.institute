@@ -176,7 +176,7 @@
                 transform: translateX(-50%) !important;
                 width: 70px;
                 height: 70px;
-                display: flex; /* Make it a flex container for alignment */
+                display: flex;
                 align-items: center;
             }
             .lesson-node::after {
@@ -191,7 +191,6 @@
             .lesson-node.completed::after { background-color: #dc2626; }
             .lesson-node.active::after { background: linear-gradient(to bottom, #dc2626 50%, #4b5563 50%); }
 
-            /* FIXED: Tooltip is now visible and styled correctly */
             .lesson-tooltip {
                 opacity: 1;
                 position: static;
@@ -213,8 +212,16 @@
 <body class="main-background text-white">
     <header class="bg-black/90 backdrop-blur-md shadow-lg fixed top-0 w-full z-40">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-             <a href="index.html" class="text-3xl font-bold tracking-wider text-red-600 flex items-center"><svg class="h-12 w-12 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 12H6V22H18V12H22L12 2Z" fill="currentColor"/><path d="M12 2L15.5 12H18L12 22L6 12H8.5L12 2Z" fill="white" fill-opacity="0.2"/><path d="M12 11.5L14.2426 13.7426L16.4853 11.5L14.2426 9.25736L12 11.5Z" fill="currentColor"/></svg>ROCK ON</a>
-            <nav><a href="student-dashboard.html" class="text-red-600 hover:text-red-400 font-semibold">Dashboard</a></nav>
+             <a href="Student Dashboard.html" class="text-3xl font-bold tracking-wider text-red-600 flex items-center"><svg class="h-12 w-12 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 12H6V22H18V12H22L12 2Z" fill="currentColor"/><path d="M12 2L15.5 12H18L12 22L6 12H8.5L12 2Z" fill="white" fill-opacity="0.2"/><path d="M12 11.5L14.2426 13.7426L16.4853 11.5L14.2426 9.25736L12 11.5Z" fill="currentColor"/></svg>ROCK ON</a>
+            <button id="mobile-menu-button" class="md:hidden text-gray-400 focus:outline-none focus:text-red-600">
+                <i class="fas fa-bars fa-2x"></i>
+            </button>
+            <nav id="nav-menu" class="hidden md:flex absolute md:relative top-full left-0 w-full md:w-auto bg-black/90 md:bg-transparent p-4 md:p-0 mt-2 md:mt-0 rounded-b-lg md:rounded-none">
+                <ul class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8 w-full md:w-auto">
+                    <li><a href="student-dashboard.html" class="block text-red-600 hover:text-red-400 transition-colors duration-300 font-semibold text-center">Dashboard</a></li>
+                    <li><a href="login.html" class="block w-full text-center px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all duration-300">Logout</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
@@ -226,12 +233,10 @@
             </div>
             <div class="roadmap-wrapper">
                 <div class="roadmap-container">
-                    <!-- Timeline Bar -->
-                    <div class="timeline-bar">
+                    <div class="timeline-bar hidden md:block">
                         <div id="timeline-progress" class="timeline-progress"></div>
                     </div>
 
-                    <!-- Lesson Nodes -->
                     <div class="lesson-node node-above completed" data-node="1">
                         <div class="node-icon">𝄞</div>
                         <div class="lesson-tooltip">Music Basics</div>
@@ -277,10 +282,20 @@
             const progressPercentage = (completedLessons / (totalLessons - 1)) * 100;
             const adjustment = (1 / (totalLessons - 1)) * 50;
             if(progress) {
-                progress.style.width = `calc(${progressPercentage}% - ${adjustment}%)`;
+                setTimeout(() => {
+                    progress.style.width = `calc(${progressPercentage}% - ${adjustment}%)`;
+                }, 500);
             }
+        });
+
+        // --- Mobile Menu Toggle ---
+        document.getElementById('mobile-menu-button').addEventListener('click', () => {
+            const navMenu = document.getElementById('nav-menu');
+            navMenu.classList.toggle('hidden');
+            const icon = document.querySelector('#mobile-menu-button i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
         });
     </script>
 </body>
 </html>
-
