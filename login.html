@@ -52,77 +52,6 @@
             font-size: 14px;
         }
 
-        .role-selector {
-            margin-bottom: 25px;
-        }
-
-        .role-selector label {
-            display: block;
-            margin-bottom: 8px;
-            color: #d1d5db;
-            font-weight: 500;
-        }
-
-        .role-options {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 10px;
-        }
-
-        .role-option {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .role-option:hover {
-            background: rgba(220, 38, 38, 0.1);
-        }
-
-        .role-option input[type="radio"] {
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            border: 2px solid #374151;
-            border-radius: 50%;
-            background: #1f2937;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .role-option input[type="radio"]:checked {
-            border-color: #dc2626;
-            background: #dc2626;
-        }
-
-        .role-option input[type="radio"]:checked::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: white;
-        }
-
-        .role-option span {
-            color: #d1d5db;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .role-option input[type="radio"]:checked + span {
-            color: #dc2626;
-        }
-
         .form-group {
             margin-bottom: 20px;
             position: relative;
@@ -150,18 +79,6 @@
             outline: none;
             border-color: #dc2626; /* red-600 */
             box-shadow: none;
-        }
-
-        .admin-hint {
-            font-size: 12px;
-            color: #9ca3af;
-            text-align: center;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .admin-hint.show {
-            display: block;
         }
 
         .forgot-password {
@@ -266,6 +183,12 @@
         .signup-link a:hover {
             text-decoration: underline;
             color: #ef4444; /* red-500 */
+        }
+
+        @media (max-width: 400px) {
+            .login-container {
+                padding: 25px;
+            }
         }
     </style>
 </head>
@@ -403,7 +326,7 @@
                 // User is already logged in, redirect them
                 if (userRole === 'admin') {
                     showMessage('Already logged in as admin. Redirecting...', 'info');
-                    setTimeout(() => window.location.href = 'admin-dashboard.html', 1500);
+                    setTimeout(() => window.location.href = 'admin.html', 1500);
                 } else {
                     showMessage('Already logged in. Redirecting...', 'info');
                     setTimeout(() => window.location.href = 'Student Dashboard.html', 1500);
