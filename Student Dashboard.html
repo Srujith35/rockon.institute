@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | ROCK ON</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000;
+        }
+        .dashboard-background {
+            background: linear-gradient(180deg, rgba(0, 0, 0, 1), rgba(20, 20, 20, 1));
+        }
+        @keyframes pulse-logo {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .logo-animate {
+            animation: pulse-logo 2s ease-in-out infinite;
+        }
+        html { scroll-behavior: smooth; }
+        .dashboard-card { transition: all 0.3s ease; }
+        .dashboard-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(220, 38, 38, 0.2);
+        }
+        .button-hover:hover { box-shadow: 0 0 20px rgba(220, 38, 38, 0.5); }
+        .progress-bar-fill { transition: width 0.5s ease-in-out; }
+
+        /* --- SLIDING NOTIFICATION STYLES --- */
+        .notification {
+            position: fixed; z-index: 100; background-color: #1f2937; border-radius: 0.5rem; padding: 1rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); display: flex; align-items: flex-start; border-left-width: 4px; opacity: 0; visibility: hidden; transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out, visibility 0.5s;
+            /* Mobile-first: Slides from top */
+            top: 1rem; left: 5%; right: 5%; width: 90%; transform: translateY(-120%);
+        }
+        .notification.show { transform: translateY(0); opacity: 1; visibility: visible; }
+        @media (min-width: 768px) { /* Desktop: Slides from right */
+            .notification { top: 1.5rem; left: auto; right: 1.5rem; width: auto; max-width: 350px; transform: translateX(110%); }
+            .notification.show { transform: translateX(0); }
+        }
+        .notification-icon { font-size: 1.5rem; margin-right: 0.75rem; flex-shrink: 0; }
+        .notification-close-btn { background: none; border: none; color: #6b7280; font-size: 1.25rem; cursor: pointer; margin-left: auto; padding-left: 0.5rem; transition: color 0.2s ease; }
+        .notification-close-btn:hover { color: #ffffff; }
+        .status-yellow { border-color: #F59E0B; } .status-yellow .notification-icon { color: #F59E0B; }
+        .status-red { border-color: #EF4444; } .status-red .notification-icon { color: #EF4444; }
+
+        /* --- OVERDUE MODAL STYLES --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 110; opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+        }
+        .modal-overlay.visible { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            position: relative; background-color: #111827; border: 1px solid #dc2626; color: #F87171; border-radius: 1rem; padding: 2.5rem; width: 90%; max-width: 450px; text-align: center; transform: scale(0.95); transition: transform 0.3s ease;
+        }
+        .modal-overlay.visible .modal-content { transform: scale(1); }
+        .modal-content i { font-size: 3.5rem; margin-bottom: 1rem; }
+        .modal-content .pay-now-btn { display: inline-block; margin-top: 1.5rem; padding: 0.75rem 2rem; background-color: #dc2626; color: white; font-weight: 600; border-radius: 9999px; text-decoration: none; transition: all 0.3s ease; }
+        .modal-content .pay-now-btn:hover { background-color: #ef4444; transform: scale(1.05); }
+    </style>
+</head>
+<body class="bg-black text-white">
+
+    <header class="bg-black/90 backdrop-blur-md shadow-lg fixed top-0 w-full z-40 transition-all duration-300">
+        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
+            <a href="index.html" class="text-2xl sm:text-3xl font-bold tracking-wider text-red-600 flex items-center hover:text-red-500 transition-colors duration-300">
+                <svg class="h-10 w-10 sm:h-12 sm:w-12 mr-2 logo-animate" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 12H6V22H18V12H22L12 2Z" fill="currentColor"/><path d="M12 2L15.5 12H18L12 22L6 12H8.5L12 2Z" fill="white" fill-opacity="0.2"/><path d="M12 11.5L14.2426 13.7426L16.4853 11.5L14.2426 9.25736L12 11.5Z" fill="currentColor"/></svg>
+                ROCK ON
+            </a>
+            <button id="mobile-menu-button" class="md:hidden absolute top-6 right-4 text-gray-400 focus:outline-none focus:text-red-600"><i class="fas fa-bars fa-2x"></i></button>
+            <nav id="nav-menu" class="hidden md:flex flex-col md:flex-row mt-4 md:mt-0 items-center w-full md:w-auto">
+                <ul class="flex flex-col md:flex-row justify-center md:space-x-8 space-y-4 md:space-y-0 w-full md:w-auto items-center">
+                    <li><p class="text-gray-300 font-semibold text-center py-2">Welcome, Student!</p></li>
+                    <li><a href="notes.html" class="block text-red-600 hover:text-red-400 transition-colors duration-300 font-semibold text-center py-2">Notes</a></li>
+                    <li><a href="login.html" class="block px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all duration-300 button-hover text-center">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="dashboard-background min-h-screen pt-32 pb-24">
+        <div class="container mx-auto px-4">
+            <div class="text-left mb-16">
+                <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Student Dashboard</h1>
+                <p class="text-xl text-gray-400 max-w-2xl">Your central hub for everything at ROCK ON.</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="dashboard-card bg-gradient-to-br from-gray-900 to-black rounded-xl p-8 shadow-2xl border border-red-600">
+                    <div class="flex items-center mb-6"><i class="fas fa-sticky-note text-3xl md:text-4xl text-red-600 mr-4"></i><h3 class="text-2xl md:text-3xl font-bold text-red-600">Notes</h3></div>
+                    <p class="text-gray-300 leading-relaxed mb-6">Access all your class notes, theory materials, and practice sheets here.</p><a href="notes.html" class="block w-full text-center px-6 py-3 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all duration-300 button-hover">View My Notes</a>
+                </div>
+                <div class="dashboard-card bg-gradient-to-br from-gray-900 to-black rounded-xl p-8 shadow-2xl border border-red-600">
+                    <div class="flex items-center mb-6"><i class="fas fa-chart-line text-3xl md:text-4xl text-red-600 mr-4"></i><h3 class="text-2xl md:text-3xl font-bold text-red-600">Progress</h3></div>
+                    <p class="text-gray-300 leading-relaxed mb-4">Track your development in the "Advanced Guitar" program.</p><div class="w-full bg-gray-700 rounded-full h-4 mb-6"><div class="bg-red-600 h-4 rounded-full progress-bar-fill" style="width: 75%"></div></div><a href="learning path.html" class="block w-full text-center px-6 py-3 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all duration-300 button-hover">View Detailed Report</a>
+                </div>
+                <div class="dashboard-card bg-gradient-to-br from-gray-900 to-black rounded-xl p-8 shadow-2xl border border-red-600">
+                    <div class="flex items-center mb-6"><i class="fas fa-file-alt text-3xl md:text-4xl text-red-600 mr-4"></i><h3 class="text-2xl md:text-3xl font-bold text-red-600">Assessments</h3></div>
+                    <p class="text-gray-300 leading-relaxed mb-6"><strong>Upcoming:</strong> Music Theory Exam<br><strong>Date:</strong> 30th September 2025</p><a href="#" class="block w-full text-center px-6 py-3 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all duration-300 button-hover">View All Assessments</a>
+                </div>
+                <div class="dashboard-card bg-gradient-to-br from-gray-900 to-black rounded-xl p-8 shadow-2xl border border-red-600 lg:col-span-1">
+                    <div class="flex items-center mb-6"><i class="fas fa-calendar-check text-3xl md:text-4xl text-red-600 mr-4"></i><h3 class="text-2xl md:text-3xl font-bold text-red-600">Events</h3></div>
+                    <p class="text-gray-300 leading-relaxed mb-6">Don't miss the "Live Jamming Workshop" on <strong>15th October 2025</strong>.</p><a href="#" class="block w-full text-center px-6 py-3 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all duration-300 button-hover">Register Now</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gradient-to-b from-black to-gray-900 py-12">
+        <div class="container mx-auto px-4 text-center text-gray-400 text-sm">
+            <p id="copyright-year">&copy; 2025 ROCK ON Music & Arts Institute. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <div id="feeNotification" class="notification">
+        <i id="notificationIcon" class="notification-icon"></i>
+        <div id="notificationText" class="text-sm"></div>
+        <button id="notificationCloseBtn" class="notification-close-btn">&times;</button>
+    </div>
+    <div id="overdueModalOverlay" class="modal-overlay">
+        <div class="modal-content">
+            <i class="fas fa-exclamation-circle"></i><h2 class="text-3xl font-bold text-white">Payment Overdue</h2><p class="mt-2 text-lg">Your payment for ₹5,000 is past its due date.</p><p class="text-sm text-gray-400">Please clear the balance to continue accessing our services.</p><a href="#" class="pay-now-btn">Pay Now</a>
+        </div>
+    </div>
+    <script>
+        // --- Mobile Menu Toggle ---
+        document.getElementById('mobile-menu-button').addEventListener('click', () => {
+            const navMenu = document.getElementById('nav-menu');
+            navMenu.classList.toggle('hidden');
+            const icon = document.querySelector('#mobile-menu-button i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+        
+        // --- Dynamic Copyright Year ---
+        document.getElementById('copyright-year').innerHTML = `&copy; ${new Date().getFullYear()} ROCK ON Music & Arts Institute. All Rights Reserved.`;
+
+        // --- FEE NOTIFICATION & MODAL SCRIPT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- CONFIGURATION ---
+            const isPaid = false; // Set to true to simulate a paid fee
+            // TO TEST: Change this date.
+            // Past date (e.g., '2025-09-20') -> shows OVERDUE MODAL
+            // Future date within 7 days (e.g., '2025-09-28') -> shows SLIDING NOTIFICATION
+            const dueDateString = '2025-10-01';
+
+            // --- ELEMENT REFERENCES ---
+            const notification = document.getElementById('feeNotification');
+            const notificationIcon = document.getElementById('notificationIcon');
+            const notificationText = document.getElementById('notificationText');
+            const notificationCloseBtn = document.getElementById('notificationCloseBtn');
+            const modalOverlay = document.getElementById('overdueModalOverlay');
+
+            // --- STATUS DETERMINATION LOGIC ---
+            let feeStatus = 'paid';
+            if (!isPaid) {
+                const dueDate = new Date(dueDateString);
+                const currentDate = new Date();
+                dueDate.setHours(0, 0, 0, 0);
+                currentDate.setHours(0, 0, 0, 0);
+
+                if (currentDate > dueDate) {
+                    feeStatus = 'overdue';
+                } else {
+                    const daysUntilDue = Math.ceil((dueDate - currentDate) / (1000 * 60 * 60 * 24));
+                    if (daysUntilDue <= 7) {
+                        feeStatus = 'due_soon';
+                    } else {
+                        feeStatus = 'upcoming';
+                    }
+                }
+            }
+
+            // --- UI CONTROL LOGIC ---
+            const handleFeeStatus = () => {
+                // 1. Handle Overdue Status -> Show Modal
+                if (feeStatus === 'overdue') {
+                    if (modalOverlay) modalOverlay.classList.add('visible');
+                    return; // Stop further execution
+                }
+
+                // 2. Handle Sliding Notification for "Due Soon" status
+                if (feeStatus === 'due_soon') {
+                    if (sessionStorage.getItem('feeNotificationDismissed') === 'true') {
+                        return; // Don't show if already dismissed
+                    }
+                    // Configure and show notification
+                    notification.className = 'notification status-yellow'; // Reset classes
+                    notificationIcon.className = 'fas fa-exclamation-triangle notification-icon';
+                    notificationText.innerHTML = `<h4 class="font-bold text-white">Fee Reminder</h4><p class="text-gray-300">Your payment of ₹5,000 is due on ${new Date(dueDateString).toLocaleDateString()}.</p>`;
+                    setTimeout(() => notification.classList.add('show'), 1000);
+                }
+                // Other statuses like 'paid' or 'upcoming' do nothing.
+            };
+
+            // --- EVENT LISTENERS ---
+            if (notificationCloseBtn) {
+                notificationCloseBtn.addEventListener('click', () => {
+                    notification.classList.remove('show');
+                    sessionStorage.setItem('feeNotificationDismissed', 'true');
+                });
+            }
+
+            // --- INITIALIZATION ---
+            handleFeeStatus();
+        });
+    </script>
+</body>
+</html>

@@ -3,61 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notes | ROCK ON</title>
+    <title>Admin: Manage Notes | ROCK ON</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #000000;
-        }
-        .dashboard-background {
-            background: linear-gradient(180deg, rgba(0, 0, 0, 1), rgba(20, 20, 20, 1));
-        }
-        @keyframes pulse-logo {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        .logo-animate {
-            animation: pulse-logo 2s ease-in-out infinite;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #000000; }
+        .dashboard-background { background: linear-gradient(180deg, rgba(0, 0, 0, 1), rgba(20, 20, 20, 1)); }
+        @keyframes pulse-logo { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .logo-animate { animation: pulse-logo 2s ease-in-out infinite; }
         html { scroll-behavior: smooth; }
         .note-card { transition: all 0.3s ease; }
-        .note-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgba(220, 38, 38, 0.2);
-        }
-        .button-hover:hover { box-shadow: 0 0 20px rgba(220, 38, 38, 0.5); }
-        /* Style for search and filter inputs */
-        .search-input {
-            background-color: #1f2937; /* gray-800 */
-            border: 1px solid #4b5563; /* gray-600 */
-            color: white;
-            transition: all 0.3s ease;
-        }
-        .search-input:focus {
-            outline: none;
-            border-color: #dc2626; /* red-600 */
-            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.5);
-        }
+        .note-card:hover { transform: translateY(-10px); box-shadow: 0 20px 25px -5px rgba(220, 38, 38, 0.2); }
+        .search-input { background-color: #1f2937; border: 1px solid #4b5563; color: white; transition: all 0.3s ease; }
+        .search-input:focus { outline: none; border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.5); }
+        /* Style for the floating action button */
+        .fab { transition: all 0.3s ease; }
+        .fab:hover { transform: scale(1.1) rotate(90deg); box-shadow: 0 0 30px rgba(220, 38, 38, 0.7); }
     </style>
 </head>
 <body class="bg-black text-white">
 
     <header class="bg-black/90 backdrop-blur-md shadow-lg fixed top-0 w-full z-40 transition-all duration-300">
         <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
-            <a href="Student Dashboard.html" class="text-2xl sm:text-3xl font-bold tracking-wider text-red-600 flex items-center hover:text-red-500 transition-colors duration-300">
+            <a href="index.html" class="text-2xl sm:text-3xl font-bold tracking-wider text-red-600 flex items-center hover:text-red-500 transition-colors">
                 <svg class="h-10 w-10 sm:h-12 sm:w-12 mr-2 logo-animate" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 12H6V22H18V12H22L12 2Z" fill="currentColor"/><path d="M12 2L15.5 12H18L12 22L6 12H8.5L12 2Z" fill="white" fill-opacity="0.2"/><path d="M12 11.5L14.2426 13.7426L16.4853 11.5L14.2426 9.25736L12 11.5Z" fill="currentColor"/></svg>
                 ROCK ON
             </a>
             <button id="mobile-menu-button" class="md:hidden absolute top-6 right-4 text-gray-400 focus:outline-none focus:text-red-600"><i class="fas fa-bars fa-2x"></i></button>
             <nav id="nav-menu" class="hidden md:flex flex-col md:flex-row mt-4 md:mt-0 items-center w-full md:w-auto">
                 <ul class="flex flex-col md:flex-row justify-center md:space-x-8 space-y-4 md:space-y-0 w-full md:w-auto items-center">
-                    <li><p class="text-gray-300 font-semibold text-center py-2">Welcome, Student!</p></li>
-                    <li><a href="notes.html" class="block text-red-400 font-bold hover:text-red-400 transition-colors duration-300 text-center py-2">Notes</a></li>
+                    <li><p class="text-gray-300 font-semibold text-center py-2">Welcome, Admin!</p></li>
+                    <li><a href="admin-dashboard.html" class="block text-red-600 hover:text-red-400 transition-colors duration-300 font-semibold text-center py-2">Dashboard</a></li>
+                    <li><a href="admin-manage-notes.html" class="block text-red-400 font-bold hover:text-red-400 transition-colors duration-300 text-center py-2">Manage Notes</a></li>
                     <li><a href="login.html" class="block px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all duration-300 button-hover text-center">Logout</a></li>
                 </ul>
             </nav>
@@ -68,8 +48,8 @@
         <div class="container mx-auto px-4">
             
             <div class="text-left mb-12">
-                <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">My Notes</h1>
-                <p class="text-xl text-gray-400 max-w-2xl">Find all your course materials, theory guides, and practice tabs.</p>
+                <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Manage Notes</h1>
+                <p class="text-xl text-gray-400 max-w-2xl">Search, filter, edit, or delete existing course materials.</p>
             </div>
 
             <div class="bg-gray-900/50 border border-gray-700 rounded-lg p-6 mb-12 flex flex-col md:flex-row gap-4 items-center">
@@ -94,49 +74,41 @@
                 
                 <div class="note-card bg-gradient-to-br from-gray-900 to-black rounded-xl p-6 shadow-2xl border border-gray-700 flex flex-col" data-title="Introduction to Music Theory" data-category="theory">
                     <div class="flex items-center mb-4"><i class="fas fa-book-open text-2xl text-red-600 mr-4"></i><h3 class="text-xl font-bold text-red-500">Intro to Music Theory</h3></div>
-                    <p class="text-gray-400 leading-relaxed mb-6 flex-grow">Basics of notes, scales, and intervals. A foundational guide for all musicians.</p>
+                    <p class="text-gray-400 leading-relaxed mb-4 flex-grow">Basics of notes, scales, and intervals. A foundational guide for all musicians.</p>
                     <span class="text-xs text-gray-500 mb-4">Category: Music Theory</span>
-                    <a href="#" class="block w-full text-center px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all duration-300 button-hover mt-auto">Open Note</a>
+                    <div class="mt-auto pt-4 border-t border-gray-600 flex gap-3">
+                        <a href="#" class="flex-1 text-center px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-500 text-sm font-semibold transition-all">Edit</a>
+                        <a href="#" class="flex-1 text-center px-4 py-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 text-sm font-semibold transition-all">Delete</a>
+                    </div>
                 </div>
 
                 <div class="note-card bg-gradient-to-br from-gray-900 to-black rounded-xl p-6 shadow-2xl border border-gray-700 flex flex-col" data-title="Classic Rock Riffs Guitar Tabs" data-category="tabs">
                     <div class="flex items-center mb-4"><i class="fas fa-guitar text-2xl text-red-600 mr-4"></i><h3 class="text-xl font-bold text-red-500">Classic Rock Riffs</h3></div>
-                    <p class="text-gray-400 leading-relaxed mb-6 flex-grow">Learn to play iconic guitar riffs from legendary rock bands. Includes tablature and tips.</p>
+                    <p class="text-gray-400 leading-relaxed mb-4 flex-grow">Learn to play iconic guitar riffs from legendary rock bands. Includes tablature and tips.</p>
                     <span class="text-xs text-gray-500 mb-4">Category: Guitar Tabs</span>
-                    <a href="#" class="block w-full text-center px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all duration-300 button-hover mt-auto">View Tabs</a>
+                     <div class="mt-auto pt-4 border-t border-gray-600 flex gap-3">
+                        <a href="#" class="flex-1 text-center px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-500 text-sm font-semibold transition-all">Edit</a>
+                        <a href="#" class="flex-1 text-center px-4 py-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 text-sm font-semibold transition-all">Delete</a>
+                    </div>
                 </div>
 
                 <div class="note-card bg-gradient-to-br from-gray-900 to-black rounded-xl p-6 shadow-2xl border border-gray-700 flex flex-col" data-title="Major and Minor Chord Charts" data-category="chords">
                     <div class="flex items-center mb-4"><i class="fas fa-music text-2xl text-red-600 mr-4"></i><h3 class="text-xl font-bold text-red-500">Chord Charts</h3></div>
-                    <p class="text-gray-400 leading-relaxed mb-6 flex-grow">A comprehensive library of all major and minor chord diagrams for guitar.</p>
+                    <p class="text-gray-400 leading-relaxed mb-4 flex-grow">A comprehensive library of all major and minor chord diagrams for guitar.</p>
                     <span class="text-xs text-gray-500 mb-4">Category: Chord Charts</span>
-                    <a href="#" class="block w-full text-center px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all duration-300 button-hover mt-auto">Download PDF</a>
-                </div>
-
-                <div class="note-card bg-gradient-to-br from-gray-900 to-black rounded-xl p-6 shadow-2xl border border-gray-700 flex flex-col" data-title="Weekly Practice Exercises" data-category="practice">
-                    <div class="flex items-center mb-4"><i class="fas fa-file-alt text-2xl text-red-600 mr-4"></i><h3 class="text-xl font-bold text-red-500">Weekly Exercises</h3></div>
-                    <p class="text-gray-400 leading-relaxed mb-6 flex-grow">Scale runs, finger dexterity drills, and picking patterns to improve your technique.</p>
-                    <span class="text-xs text-gray-500 mb-4">Category: Practice Sheets</span>
-                    <a href="#" class="block w-full text-center px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all duration-300 button-hover mt-auto">Open Sheet</a>
-                </div>
-
-                <div class="note-card bg-gradient-to-br from-gray-900 to-black rounded-xl p-6 shadow-2xl border border-gray-700 flex flex-col" data-title="Advanced Harmony Theory" data-category="theory">
-                    <div class="flex items-center mb-4"><i class="fas fa-book-open text-2xl text-red-600 mr-4"></i><h3 class="text-xl font-bold text-red-500">Advanced Harmony</h3></div>
-                    <p class="text-gray-400 leading-relaxed mb-6 flex-grow">Exploring chord extensions, modes, and harmonic analysis for composition.</p>
-                    <span class="text-xs text-gray-500 mb-4">Category: Music Theory</span>
-                    <a href="#" class="block w-full text-center px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all duration-300 button-hover mt-auto">Open Note</a>
-                </div>
-
-                <div class="note-card bg-gradient-to-br from-gray-900 to-black rounded-xl p-6 shadow-2xl border border-gray-700 flex flex-col" data-title="Blues Licks and Turnarounds Tabs" data-category="tabs">
-                    <div class="flex items-center mb-4"><i class="fas fa-guitar text-2xl text-red-600 mr-4"></i><h3 class="text-xl font-bold text-red-500">Blues Guitar Licks</h3></div>
-                    <p class="text-gray-400 leading-relaxed mb-6 flex-grow">A collection of essential blues licks and turnaround phrases in various keys.</p>
-                    <span class="text-xs text-gray-500 mb-4">Category: Guitar Tabs</span>
-                    <a href="#" class="block w-full text-center px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all duration-300 button-hover mt-auto">View Tabs</a>
+                     <div class="mt-auto pt-4 border-t border-gray-600 flex gap-3">
+                        <a href="#" class="flex-1 text-center px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-500 text-sm font-semibold transition-all">Edit</a>
+                        <a href="#" class="flex-1 text-center px-4 py-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 text-sm font-semibold transition-all">Delete</a>
+                    </div>
                 </div>
 
             </div>
         </div>
     </main>
+    
+    <a href="admin-add-note.html" title="Add New Note" class="fab fixed bottom-8 right-8 bg-red-600 w-16 h-16 rounded-full flex items-center justify-center text-white shadow-lg z-50">
+        <i class="fas fa-plus fa-2x"></i>
+    </a>
 
     <footer class="bg-gradient-to-b from-black to-gray-900 py-12">
         <div class="container mx-auto px-4 text-center text-gray-400 text-sm">
@@ -145,24 +117,19 @@
     </footer>
 
     <script>
-        // --- Mobile Menu Toggle ---
         document.getElementById('mobile-menu-button').addEventListener('click', () => {
-            const navMenu = document.getElementById('nav-menu');
-            navMenu.classList.toggle('hidden');
+            document.getElementById('nav-menu').classList.toggle('hidden');
             const icon = document.querySelector('#mobile-menu-button i');
             icon.classList.toggle('fa-bars');
             icon.classList.toggle('fa-times');
         });
-        
-        // --- Dynamic Copyright Year ---
         document.getElementById('copyright-year').innerHTML = `&copy; ${new Date().getFullYear()} ROCK ON Music & Arts Institute. All Rights Reserved.`;
 
         // --- NOTES SEARCH AND FILTER SCRIPT ---
         document.addEventListener('DOMContentLoaded', () => {
             const searchInput = document.getElementById('searchInput');
             const categoryFilter = document.getElementById('categoryFilter');
-            const notesContainer = document.getElementById('notesContainer');
-            const noteCards = notesContainer.querySelectorAll('.note-card');
+            const noteCards = document.querySelectorAll('.note-card');
 
             function filterNotes() {
                 const searchTerm = searchInput.value.toLowerCase();
@@ -172,19 +139,17 @@
                     const title = card.dataset.title.toLowerCase();
                     const category = card.dataset.category;
 
-                    // Conditions to show the card
                     const matchesSearch = title.includes(searchTerm);
                     const matchesCategory = (selectedCategory === 'all' || category === selectedCategory);
 
                     if (matchesSearch && matchesCategory) {
-                        card.style.display = 'flex'; // Use flex as it's a flex container
+                        card.style.display = 'flex';
                     } else {
                         card.style.display = 'none';
                     }
                 });
             }
 
-            // Event listeners
             searchInput.addEventListener('keyup', filterNotes);
             categoryFilter.addEventListener('change', filterNotes);
         });

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 1), rgba(20, 20, 20, 1));
+            color: #d1d5db; /* gray-300 */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: linear-gradient(to bottom right, #111827, #000000); /* gray-900 to black */
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(220, 38, 38, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid #dc2626; /* red-600 */
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            color: #dc2626; /* red-600 */
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #9ca3af; /* gray-400 */
+            font-size: 14px;
+        }
+
+        .role-selector {
+            margin-bottom: 25px;
+        }
+
+        .role-selector label {
+            display: block;
+            margin-bottom: 8px;
+            color: #d1d5db;
+            font-weight: 500;
+        }
+
+        .role-options {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .role-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .role-option:hover {
+            background: rgba(220, 38, 38, 0.1);
+        }
+
+        .role-option input[type="radio"] {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #374151;
+            border-radius: 50%;
+            background: #1f2937;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .role-option input[type="radio"]:checked {
+            border-color: #dc2626;
+            background: #dc2626;
+        }
+
+        .role-option input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+        }
+
+        .role-option span {
+            color: #d1d5db;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .role-option input[type="radio"]:checked + span {
+            color: #dc2626;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #d1d5db; /* gray-300 */
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #374151; /* gray-700 */
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #1f2937; /* gray-800 */
+            color: #ffffff;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #dc2626; /* red-600 */
+            box-shadow: none;
+        }
+
+        .admin-hint {
+            font-size: 12px;
+            color: #9ca3af;
+            text-align: center;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .admin-hint.show {
+            display: block;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password a {
+            font-size: 13px;
+            color: #dc2626; /* red-600 */
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .forgot-password a:hover {
+            text-decoration: underline;
+            color: #ef4444; /* red-500 */
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 12px;
+            background: #dc2626; /* red-600 */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-button:hover {
+            background: #ef4444; /* red-500 */
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .login-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            background: #dc2626;
+            box-shadow: none;
+        }
+
+        .message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+            display: none;
+        }
+
+        .message.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #34d399; /* green-400 */
+            border: 1px solid #059669; /* green-600 */
+        }
+
+        .message.error {
+            background: rgba(220, 38, 38, 0.1);
+            color: #f87171; /* red-400 */
+            border: 1px solid #dc2626; /* red-600 */
+        }
+
+        .message.info {
+            background: rgba(59, 130, 246, 0.1);
+            color: #60a5fa; /* blue-400 */
+            border: 1px solid #2563eb; /* blue-600 */
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #374151; /* gray-700 */
+        }
+
+        .signup-link a {
+            color: #dc2626; /* red-600 */
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+            color: #ef4444; /* red-500 */
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Welcome Back!</h1>
+            <p>Please enter your details to sign in.</p>
+        </div>
+
+        <form id="loginForm">
+        <div class="form-group">
+            <label for="username">Username, Phone, or ID</label>
+             <input type="text" id="username" name="username" required placeholder="Enter your username, phone, or ID">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Enter your password">
+            </div>
+
+            <div class="forgot-password" id="forgotPasswordLink">
+                <a href="forgot-password.html">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="login-button" id="loginBtn">
+                Sign In
+            </button>
+
+            <div id="message" class="message"></div>
+        </form>
+
+        <div class="signup-link" id="signupLink">
+            <p>Don't have an account? <a href="register.html">Sign up here</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Replace with your actual Google Apps Script URL
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyvO8yff7eexR2aAJdTA77ePdVrV6QREjx0ND5Pesmhw-3YoXMb834bOLtqtt-YS7hT/exec';
+
+        const form = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const message = document.getElementById('message');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+
+        form.addEventListener('submit', handleLogin);
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            if (!usernameInput.value.trim() || !passwordInput.value) {
+                showMessage('Username and password are required.', 'error');
+                return;
+            }
+
+            setLoading(true);
+            hideMessage();
+
+            try {
+                const formData = new FormData();
+                formData.append('action', 'login');
+                formData.append('username', usernameInput.value.trim());
+                formData.append('password', passwordInput.value);
+
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Store user data in sessionStorage for the session
+                    if (result.userData) {
+                        sessionStorage.setItem('userData', JSON.stringify(result.userData));
+                        sessionStorage.setItem('userRole', result.userRole);
+                    }
+
+                    showMessage(result.message, 'success');
+                    
+                    // Redirect based on user role (automatically detected by server)
+                    setTimeout(() => {
+                        if (result.role === 'admin') {
+                            window.location.href = 'admin.html';
+                        } else {
+                            window.location.href = 'Student Dashboard.html';
+                        }
+                    }, 1500);
+
+                } else {
+                    showMessage(result.message || 'Login failed. Please check your credentials.', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showMessage('Connection error. Please try again. Make sure your Google Apps Script is properly deployed.', 'error');
+            }
+
+            setLoading(false);
+        }
+        
+        function setLoading(loading) {
+            loginBtn.disabled = loading;
+            if (loading) {
+                loginBtn.innerHTML = '<span class="loading-spinner"></span>Signing In...';
+            } else {
+                loginBtn.innerHTML = 'Sign In';
+            }
+        }
+
+        function showMessage(text, type) {
+            message.textContent = text;
+            message.className = `message ${type}`;
+            message.style.display = 'block';
+        }
+
+        function hideMessage() {
+            message.style.display = 'none';
+        }
+
+        // Check if user is already logged in
+        window.addEventListener('load', () => {
+            const userData = sessionStorage.getItem('userData');
+            const userRole = sessionStorage.getItem('userRole');
+            
+            if (userData && userRole) {
+                // User is already logged in, redirect them
+                if (userRole === 'admin') {
+                    showMessage('Already logged in as admin. Redirecting...', 'info');
+                    setTimeout(() => window.location.href = 'admin-dashboard.html', 1500);
+                } else {
+                    showMessage('Already logged in. Redirecting...', 'info');
+                    setTimeout(() => window.location.href = 'Student Dashboard.html', 1500);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
