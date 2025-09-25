@@ -13,7 +13,7 @@
         body { font-family: 'Inter', sans-serif; }
         .hover-effect:hover { box-shadow: 0 0 20px rgba(220, 38, 38, 0.5); }
         /* Custom scrollbar for a better dark-mode experience */
-        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #111827; }
         ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #b91c1c; }
@@ -21,8 +21,10 @@
 </head>
 <body class="bg-gray-900 text-gray-300">
 
-    <div class="flex h-screen bg-black">
-        <aside class="w-64 flex-shrink-0 bg-black flex flex-col border-r border-gray-800">
+    <div class="relative min-h-screen md:flex">
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden md:hidden"></div>
+        
+        <aside id="sidebar" class="w-64 flex-shrink-0 bg-black flex flex-col border-r border-gray-800 fixed inset-y-0 left-0 z-30 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out">
             <div class="h-20 flex items-center justify-center text-red-600">
                  <a href="admin.html" class="text-3xl font-bold tracking-wider flex items-center">
                     <svg class="h-10 w-10 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 12H6V22H18V12H22L12 2Z" fill="currentColor"/><path d="M12 2L15.5 12H18L12 22L6 12H8.5L12 2Z" fill="white" fill-opacity="0.2"/></svg>
@@ -57,32 +59,37 @@
         </aside>
 
         <div class="flex-1 flex flex-col overflow-hidden">
-            <header class="h-20 bg-black flex items-center justify-between px-8 border-b border-gray-800">
-                <h1 class="text-2xl font-bold text-white">Fee Status Management</h1>
+            <header class="h-20 bg-black flex items-center justify-between px-4 sm:px-8 border-b border-gray-800">
                 <div class="flex items-center">
-                    <div class="relative">
+                     <button id="menu-button" class="md:hidden text-gray-400 hover:text-white focus:outline-none mr-4">
+                        <i class="fas fa-bars fa-lg"></i>
+                    </button>
+                    <h1 class="text-xl sm:text-2xl font-bold text-white">Fee Status</h1>
+                </div>
+                <div class="flex items-center">
+                    <div class="relative hidden md:block">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                             <i class="fas fa-search text-gray-500"></i>
                         </span>
                         <input type="text" placeholder="Search by name or ID..." class="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-red-600">
                     </div>
                     <div class="ml-6 flex items-center">
-                        <span class="text-white font-semibold">Admin</span>
+                        <span class="text-white font-semibold hidden sm:block">Admin</span>
                         <img class="w-10 h-10 rounded-full ml-4 border-2 border-red-600" src="https://i.pravatar.cc/150?u=admin" alt="Admin Avatar">
                     </div>
                 </div>
             </header>
 
-            <main class="flex-1 overflow-y-auto p-8 bg-gray-900">
+            <main class="flex-1 overflow-y-auto p-4 sm:p-8 bg-gray-900">
                 
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold text-white">Student Fee Overview</h2>
-                    <button class="px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-500 transition duration-200 hover-effect">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+                    <h2 class="text-xl font-semibold text-white mb-4 sm:mb-0">Student Fee Overview</h2>
+                    <button class="w-full sm:w-auto px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-500 transition duration-200 hover-effect">
                         <i class="fas fa-plus-circle mr-2"></i>Record a Payment
                     </button>
                 </div>
 
-                <div class="mb-6 flex space-x-2">
+                <div class="mb-6 flex flex-wrap gap-2">
                     <button class="px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded-lg">All</button>
                     <button class="px-4 py-2 text-sm font-semibold text-gray-300 bg-gray-700 hover:bg-gray-600 rounded-lg">Paid</button>
                     <button class="px-4 py-2 text-sm font-semibold text-gray-300 bg-gray-700 hover:bg-gray-600 rounded-lg">Pending</button>
@@ -90,81 +97,102 @@
                 </div>
 
                 <div class="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
-                    <table class="w-full text-left">
-                        <thead class="bg-black text-gray-400 uppercase text-sm">
-                            <tr>
-                                <th class="p-4">Student Name</th>
-                                <th class="p-4">Program</th>
-                                <th class="p-4">Total Fee</th>
-                                <th class="p-4">Amount Paid</th>
-                                <th class="p-4">Balance Due</th>
-                                <th class="p-4">Last Payment</th>
-                                <th class="p-4 text-center">Status</th>
-                                <th class="p-4 text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-700">
-                            <tr>
-                                <td class="p-4">
-                                    <div class="font-medium text-white">Alex Johnson</div>
-                                    <div class="text-xs text-gray-400 font-mono">ROGGTR001</div>
-                                </td>
-                                <td class="p-4">Guitar Mastery</td>
-                                <td class="p-4">$1200.00</td>
-                                <td class="p-4">$1200.00</td>
-                                <td class="p-4 font-semibold text-green-500">$0.00</td>
-                                <td class="p-4 text-sm text-gray-400">2025-09-15</td>
-                                <td class="p-4 text-center"><span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-500/20 text-green-500">Paid</span></td>
-                                <td class="p-4 text-center space-x-2">
-                                    <button class="text-gray-400 hover:text-white" title="View Details"><i class="fas fa-eye"></i></button>
-                                </td>
-                            </tr>
-                            <tr class="bg-gray-800/50">
-                                <td class="p-4">
-                                    <div class="font-medium text-white">Maria Garcia</div>
-                                    <div class="text-xs text-gray-400 font-mono">ROGVOC002</div>
-                                </td>
-                                <td class="p-4">Vocal Training</td>
-                                <td class="p-4">$800.00</td>
-                                <td class="p-4">$400.00</td>
-                                <td class="p-4 font-semibold text-yellow-500">$400.00</td>
-                                <td class="p-4 text-sm text-gray-400">2025-09-10</td>
-                                <td class="p-4 text-center"><span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-500/20 text-yellow-500">Pending</span></td>
-                                <td class="p-4 text-center space-x-2">
-                                    <button class="text-gray-400 hover:text-white" title="View Details"><i class="fas fa-eye"></i></button>
-                                    <button class="text-gray-400 hover:text-yellow-500" title="Send Reminder"><i class="fas fa-bell"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="p-4">
-                                    <div class="font-medium text-white">James Smith</div>
-                                    <div class="text-xs text-gray-400 font-mono">ROGDRM004</div>
-                                </td>
-                                <td class="p-4">Drums & Percussion</td>
-                                <td class="p-4">$1500.00</td>
-                                <td class="p-4">$500.00</td>
-                                <td class="p-4 font-semibold text-red-500">$1000.00</td>
-                                <td class="p-4 text-sm text-gray-400">2025-07-20</td>
-                                <td class="p-4 text-center"><span class="px-3 py-1 text-xs font-semibold rounded-full bg-red-500/20 text-red-500">Overdue</span></td>
-                                <td class="p-4 text-center space-x-2">
-                                    <button class="text-gray-400 hover:text-white" title="View Details"><i class="fas fa-eye"></i></button>
-                                    <button class="text-gray-400 hover:text-red-500" title="Send Reminder"><i class="fas fa-bell"></i></button>
-                                </td>
-                            </tr>
-                             <tr class="bg-gray-800/50">
-                                <td class="p-4">
-                                    <div class="font-medium text-white">Emily White</div>
-                                    <div class="text-xs text-gray-400 font-mono">ROGKBD005</div>
-                                </td>
-                                <td class="p-4">Keyboard Fundamentals</td>
-                                <td class="p-4">$950.00</td>
-                                <td class="p-4">$950.00</td>
-                                <td class="p-4 font-semibold text-green-500">$0.00</td>
-                                <td class="p-4 text-sm text-gray-400">2025-09-18</td>
-                                <td class="p-4 text-center"><span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-500/20 text-green-500">Paid</span></td>
-                                <td class="p-4 text-center space-x-2">
-                                    <button class="text-gray-400 hover:text-white" title="View Details"><i class="fas fa-eye"></i></button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left min-w-[900px]">
+                            <thead class="bg-black text-gray-400 uppercase text-sm">
+                                <tr>
+                                    <th class="p-4">Student Name</th>
+                                    <th class="p-4">Program</th>
+                                    <th class="p-4">Total Fee</th>
+                                    <th class="p-4">Amount Paid</th>
+                                    <th class="p-4">Balance Due</th>
+                                    <th class="p-4">Last Payment</th>
+                                    <th class="p-4 text-center">Status</th>
+                                    <th class="p-4 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-700">
+                                <tr>
+                                    <td class="p-4">
+                                        <div class="font-medium text-white">Alex Johnson</div>
+                                        <div class="text-xs text-gray-400 font-mono">ROGGTR001</div>
+                                    </td>
+                                    <td class="p-4">Guitar Mastery</td>
+                                    <td class="p-4">$1200.00</td>
+                                    <td class="p-4">$1200.00</td>
+                                    <td class="p-4 font-semibold text-green-500">$0.00</td>
+                                    <td class="p-4 text-sm text-gray-400">2025-09-15</td>
+                                    <td class="p-4 text-center"><span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-500/20 text-green-500">Paid</span></td>
+                                    <td class="p-4 text-center space-x-2">
+                                        <button class="text-gray-400 hover:text-white" title="View Details"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="bg-gray-800/50">
+                                    <td class="p-4">
+                                        <div class="font-medium text-white">Maria Garcia</div>
+                                        <div class="text-xs text-gray-400 font-mono">ROGVOC002</div>
+                                    </td>
+                                    <td class="p-4">Vocal Training</td>
+                                    <td class="p-4">$800.00</td>
+                                    <td class="p-4">$400.00</td>
+                                    <td class="p-4 font-semibold text-yellow-500">$400.00</td>
+                                    <td class="p-4 text-sm text-gray-400">2025-09-10</td>
+                                    <td class="p-4 text-center"><span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-500/20 text-yellow-500">Pending</span></td>
+                                    <td class="p-4 text-center space-x-2">
+                                        <button class="text-gray-400 hover:text-white" title="View Details"><i class="fas fa-eye"></i></button>
+                                        <button class="text-gray-400 hover:text-yellow-500" title="Send Reminder"><i class="fas fa-bell"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4">
+                                        <div class="font-medium text-white">James Smith</div>
+                                        <div class="text-xs text-gray-400 font-mono">ROGDRM004</div>
+                                    </td>
+                                    <td class="p-4">Drums & Percussion</td>
+                                    <td class="p-4">$1500.00</td>
+                                    <td class="p-4">$500.00</td>
+                                    <td class="p-4 font-semibold text-red-500">$1000.00</td>
+                                    <td class="p-4 text-sm text-gray-400">2025-07-20</td>
+                                    <td class="p-4 text-center"><span class="px-3 py-1 text-xs font-semibold rounded-full bg-red-500/20 text-red-500">Overdue</span></td>
+                                    <td class="p-4 text-center space-x-2">
+                                        <button class="text-gray-400 hover:text-white" title="View Details"><i class="fas fa-eye"></i></button>
+                                        <button class="text-gray-400 hover:text-red-500" title="Send Reminder"><i class="fas fa-bell"></i></button>
+                                    </td>
+                                </tr>
+                                 <tr class="bg-gray-800/50">
+                                    <td class="p-4">
+                                        <div class="font-medium text-white">Emily White</div>
+                                        <div class="text-xs text-gray-400 font-mono">ROGKBD005</div>
+                                    </td>
+                                    <td class="p-4">Keyboard Fundamentals</td>
+                                    <td class="p-4">$950.00</td>
+                                    <td class="p-4">$950.00</td>
+                                    <td class="p-4 font-semibold text-green-500">$0.00</td>
+                                    <td class="p-4 text-sm text-gray-400">2025-09-18</td>
+                                    <td class="p-4 text-center"><span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-500/20 text-green-500">Paid</span></td>
+                                    <td class="p-4 text-center space-x-2">
+                                        <button class="text-gray-400 hover:text-white" title="View Details"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script>
+        const menuButton = document.getElementById('menu-button');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        menuButton.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+    </script>
+</body>
+</html>
